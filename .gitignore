@@ -1,0 +1,22 @@
+# Environment and secrets
+.env
+
+# Python
+venv/
+.venv/
+__pycache__/
+*.py[cod]
+
+# Django
+db.sqlite3
+*.sqlite3
+media/
+staticfiles/
+
+# Editors
+.vscode/
+.idea/
+
+# Build output
+node_modules/
+dist/
