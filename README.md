@@ -32,7 +32,7 @@ Clone the repository and enter the backend directory:
 
 ```powershell
 git clone https://github.com/wasifibnharun/jobtrail-backend.git
-cd backend
+cd jobtrail-backend
 ```
 
 Create and activate a virtual environment:

@@ -87,6 +87,57 @@ class AuthenticationTests(APITestCase):
             status.HTTP_401_UNAUTHORIZED,
         )
 
+    def test_duplicate_username_returns_drf_error(self):
+        User.objects.create_user(
+            username="wasif",
+            email="first@example.com",
+            password="strongpass123",
+        )
+
+        response = self.client.post(
+            reverse("register"),
+            {
+                "username": "wasif",
+                "email": "second@example.com",
+                "password": "strongpass123",
+            },
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn("username", response.data)
+        self.assertEqual(
+            str(response.data["username"][0]),
+            "A user with that username already exists.",
+        )
+
+    def test_access_token_authenticates_application_endpoint(self):
+        User.objects.create_user(
+            username="jwt-user",
+            email="jwt@example.com",
+            password="strongpass123",
+        )
+
+        login_response = self.client.post(
+            reverse("login"),
+            {
+                "username": "jwt-user",
+                "password": "strongpass123",
+            },
+            format="json",
+        )
+
+        self.client.credentials(
+            HTTP_AUTHORIZATION=(
+                f"Bearer {login_response.data['access']}"
+            )
+        )
+
+        response = self.client.get(reverse("application-list"))
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["count"], 0)
+
 
 class ApplicationAPITests(APITestCase):
     def setUp(self):
@@ -271,6 +322,24 @@ class ApplicationAPITests(APITestCase):
         self.assertEqual(
             ordered_ids,
             [second.id, first.id, third.id],
+        )
+
+        combined_response = self.client.get(
+            reverse("application-list"),
+            {
+                "status": "INTERVIEW",
+                "job_type": "REMOTE",
+                "search": "BRAIN",
+                "ordering": "-applied_on",
+                "page": 1,
+            },
+        )
+
+        self.assertEqual(combined_response.status_code, status.HTTP_200_OK)
+        self.assertEqual(combined_response.data["count"], 1)
+        self.assertEqual(
+            combined_response.data["results"][0]["id"],
+            first.id,
         )
 
     def test_pagination_and_invalid_page(self):
