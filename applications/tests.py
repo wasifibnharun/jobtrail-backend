@@ -417,6 +417,39 @@ class ApplicationAPITests(APITestCase):
             },
         )
 
+    def test_needs_follow_up_is_computed_from_status_and_date(self):
+        overdue = self.create_application(
+            status=Application.Status.APPLIED,
+            applied_on=timezone.localdate() - timedelta(days=15),
+        )
+        exactly_fourteen_days = self.create_application(
+            company="Fourteen Day Company",
+            status=Application.Status.APPLIED,
+            applied_on=timezone.localdate() - timedelta(days=14),
+        )
+        wishlist = self.create_application(
+            company="Wishlist Company",
+            status=Application.Status.WISHLIST,
+            applied_on=timezone.localdate() - timedelta(days=30),
+        )
+
+        responses = {
+            application.id: self.client.get(
+                reverse("application-detail", args=[application.id])
+            ).data
+            for application in [
+                overdue,
+                exactly_fourteen_days,
+                wishlist,
+            ]
+        }
+
+        self.assertTrue(responses[overdue.id]["needs_follow_up"])
+        self.assertFalse(
+            responses[exactly_fourteen_days.id]["needs_follow_up"]
+        )
+        self.assertFalse(responses[wishlist.id]["needs_follow_up"])
+
 class CompanyAPITests(APITestCase):
     def setUp(self):
         self.user = User.objects.create_user(

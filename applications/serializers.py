@@ -2,6 +2,8 @@ from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
 from .models import Application, Company, Interview
+from datetime import timedelta
+from django.utils import timezone
 
 
 User = get_user_model()
@@ -75,13 +77,29 @@ class CompanySerializer(serializers.ModelSerializer):
 
 class ApplicationSerializer(serializers.ModelSerializer):
     company = serializers.CharField(max_length=120)
+    needs_follow_up = serializers.SerializerMethodField()
 
     class Meta:
         model = Application
-        fields = "__all__"
+        fields = [
+            "id",
+            "owner",
+            "company",
+            "position",
+            "status",
+            "job_type",
+            "applied_on",
+            "expected_salary",
+            "job_link",
+            "notes",
+            "needs_follow_up",
+            "created_at",
+            "updated_at",
+        ]
         read_only_fields = [
             "id",
             "owner",
+            "needs_follow_up",
             "created_at",
             "updated_at",
         ]
@@ -130,6 +148,17 @@ class ApplicationSerializer(serializers.ModelSerializer):
             )
 
         return super().update(instance, validated_data)
+
+    def get_needs_follow_up(self, application):
+        if (
+            application.status != Application.Status.APPLIED
+            or application.applied_on is None
+        ):
+            return False
+
+        follow_up_cutoff = timezone.localdate() - timedelta(days=14)
+
+        return application.applied_on < follow_up_cutoff
 
 class InterviewSerializer(serializers.ModelSerializer):
     position = serializers.CharField(
