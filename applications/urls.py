@@ -9,7 +9,8 @@ from .views import (
   ApplicationViewSet,
   RegisterView,
   StatsView,
-  CompanyViewSet
+  CompanyViewSet,
+  InterviewViewSet
 )
 
 
@@ -23,6 +24,11 @@ router.register(
     "companies",
     CompanyViewSet,
     basename="company",
+)
+router.register(
+    "interviews",
+    InterviewViewSet,
+    basename="interview",
 )
 
 urlpatterns = [

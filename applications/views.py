@@ -7,12 +7,15 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.db.models.deletion import ProtectedError
 from rest_framework.exceptions import ValidationError
-from .models import Application, Company
+from rest_framework.decorators import action
+from .models import Application, Company, Interview
 from .serializers import (
     ApplicationSerializer,
     RegisterSerializer,
-    CompanySerializer
+    CompanySerializer,
+    InterviewSerializer
 )
+from django.utils import timezone
 
 
 User = get_user_model()
@@ -55,6 +58,61 @@ class CompanyViewSet(viewsets.ModelViewSet):
                     )
                 }
             ) from error
+
+class InterviewViewSet(viewsets.ModelViewSet):
+    serializer_class = InterviewSerializer
+    permission_classes = [IsAuthenticated]
+    filter_backends = [
+        DjangoFilterBackend,
+        filters.SearchFilter,
+        filters.OrderingFilter,
+    ]
+    filterset_fields = [
+        "application",
+        "mode",
+        "result",
+    ]
+    search_fields = [
+        "round_name",
+        "application__position",
+        "application__company__name",
+    ]
+    ordering_fields = [
+        "scheduled_at",
+        "created_at",
+    ]
+    ordering = ["scheduled_at"]
+
+    def get_queryset(self):
+        return (
+            Interview.objects.filter(
+                application__owner=self.request.user
+            )
+            .select_related(
+                "application",
+                "application__company",
+            )
+        )
+
+    @action(detail=False, methods=["get"])
+    def upcoming(self, request):
+        interviews = (
+            self.filter_queryset(self.get_queryset())
+            .filter(
+                scheduled_at__gte=timezone.now(),
+                result=Interview.Result.PENDING,
+            )
+            .order_by("scheduled_at")
+        )
+
+        page = self.paginate_queryset(interviews)
+
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(interviews, many=True)
+        return Response(serializer.data)
 
 class ApplicationViewSet(viewsets.ModelViewSet):
     serializer_class = ApplicationSerializer

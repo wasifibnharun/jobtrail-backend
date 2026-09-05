@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
-from .models import Application, Company
+from .models import Application, Company, Interview
 
 
 User = get_user_model()
@@ -130,3 +130,51 @@ class ApplicationSerializer(serializers.ModelSerializer):
             )
 
         return super().update(instance, validated_data)
+
+class InterviewSerializer(serializers.ModelSerializer):
+    position = serializers.CharField(
+        source="application.position",
+        read_only=True,
+    )
+    company = serializers.CharField(
+        source="application.company.name",
+        read_only=True,
+    )
+
+    class Meta:
+        model = Interview
+        fields = [
+            "id",
+            "application",
+            "position",
+            "company",
+            "round_name",
+            "scheduled_at",
+            "mode",
+            "result",
+            "notes",
+            "created_at",
+            "updated_at",
+        ]
+        read_only_fields = [
+            "id",
+            "position",
+            "company",
+            "created_at",
+            "updated_at",
+        ]
+
+    def get_fields(self):
+        fields = super().get_fields()
+        request = self.context.get("request")
+
+        if request and request.user.is_authenticated:
+            fields["application"].queryset = (
+                Application.objects.filter(owner=request.user)
+            )
+        else:
+            fields["application"].queryset = (
+                Application.objects.none()
+            )
+
+        return fields

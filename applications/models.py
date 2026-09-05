@@ -25,6 +25,47 @@ class Company(models.Model):
     def __str__(self):
         return self.name
 
+class Interview(models.Model):
+    class Mode(models.TextChoices):
+        ONSITE = "ONSITE", "Onsite"
+        VIDEO = "VIDEO", "Video"
+        PHONE = "PHONE", "Phone"
+
+    class Result(models.TextChoices):
+        PENDING = "PENDING", "Pending"
+        PASSED = "PASSED", "Passed"
+        FAILED = "FAILED", "Failed"
+
+    application = models.ForeignKey(
+        "Application",
+        on_delete=models.CASCADE,
+        related_name="interviews",
+    )
+    round_name = models.CharField(max_length=100)
+    scheduled_at = models.DateTimeField()
+    mode = models.CharField(
+        max_length=20,
+        choices=Mode.choices,
+        default=Mode.VIDEO,
+    )
+    result = models.CharField(
+        max_length=20,
+        choices=Result.choices,
+        default=Result.PENDING,
+    )
+    notes = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["scheduled_at"]
+
+    def __str__(self):
+        return (
+            f"{self.round_name}: "
+            f"{self.application.position}"
+        )
+
 class Application(models.Model):
     class Status(models.TextChoices):
         WISHLIST = "WISHLIST", "Wishlist"

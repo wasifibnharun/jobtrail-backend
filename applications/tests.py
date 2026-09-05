@@ -3,7 +3,9 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from .models import Application, Company
+from .models import Application, Company, Interview
+from django.utils import timezone
+from datetime import timedelta
 
 
 User = get_user_model()
@@ -517,4 +519,146 @@ class CompanyAPITests(APITestCase):
         self.assertEqual(
             response.status_code,
             status.HTTP_404_NOT_FOUND,
+        )
+
+class InterviewAPITests(APITestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(
+            username="interview-owner",
+            email="interview-owner@example.com",
+            password="strongpass123",
+        )
+        self.other_user = User.objects.create_user(
+            username="other-interview-owner",
+            email="other-interview@example.com",
+            password="strongpass123",
+        )
+
+        self.company = Company.objects.create(
+            owner=self.user,
+            name="JobTrail Labs",
+        )
+        self.application = Application.objects.create(
+            owner=self.user,
+            company=self.company,
+            position="Django Developer",
+        )
+
+        self.other_company = Company.objects.create(
+            owner=self.other_user,
+            name="Private Labs",
+        )
+        self.other_application = Application.objects.create(
+            owner=self.other_user,
+            company=self.other_company,
+            position="Private Position",
+        )
+
+        self.client.force_authenticate(user=self.user)
+
+    def create_interview(self, application=None, **changes):
+        data = {
+            "application": application or self.application,
+            "round_name": "Technical Interview",
+            "scheduled_at": timezone.now() + timedelta(days=2),
+            "mode": Interview.Mode.VIDEO,
+            "result": Interview.Result.PENDING,
+        }
+        data.update(changes)
+        return Interview.objects.create(**data)
+
+    def test_interview_crud_and_application_ownership(self):
+        create_response = self.client.post(
+            reverse("interview-list"),
+            {
+                "application": self.application.id,
+                "round_name": "HR Screening",
+                "scheduled_at": (
+                    timezone.now() + timedelta(days=1)
+                ).isoformat(),
+                "mode": "PHONE",
+                "result": "PENDING",
+                "notes": "Discuss availability.",
+            },
+            format="json",
+        )
+
+        self.assertEqual(
+            create_response.status_code,
+            status.HTTP_201_CREATED,
+        )
+        self.assertEqual(
+            create_response.data["company"],
+            "JobTrail Labs",
+        )
+
+        interview_id = create_response.data["id"]
+        detail_url = reverse("interview-detail", args=[interview_id])
+
+        update_response = self.client.patch(
+            detail_url,
+            {"result": "PASSED"},
+            format="json",
+        )
+        self.assertEqual(update_response.status_code, status.HTTP_200_OK)
+        self.assertEqual(update_response.data["result"], "PASSED")
+
+        forbidden_create = self.client.post(
+            reverse("interview-list"),
+            {
+                "application": self.other_application.id,
+                "round_name": "Private Interview",
+                "scheduled_at": (
+                    timezone.now() + timedelta(days=1)
+                ).isoformat(),
+            },
+            format="json",
+        )
+        self.assertEqual(
+            forbidden_create.status_code,
+            status.HTTP_400_BAD_REQUEST,
+        )
+
+        delete_response = self.client.delete(detail_url)
+        self.assertEqual(
+            delete_response.status_code,
+            status.HTTP_204_NO_CONTENT,
+        )
+
+    def test_other_users_interview_returns_404(self):
+        interview = self.create_interview(
+            application=self.other_application
+        )
+
+        response = self.client.get(
+            reverse("interview-detail", args=[interview.id])
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_404_NOT_FOUND,
+        )
+
+    def test_upcoming_returns_only_future_pending_interviews(self):
+        upcoming = self.create_interview()
+
+        self.create_interview(
+            scheduled_at=timezone.now() - timedelta(days=1)
+        )
+        self.create_interview(
+            scheduled_at=timezone.now() + timedelta(days=3),
+            result=Interview.Result.PASSED,
+        )
+        self.create_interview(
+            application=self.other_application,
+            scheduled_at=timezone.now() + timedelta(days=1),
+        )
+
+        response = self.client.get(reverse("interview-upcoming"))
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["count"], 1)
+        self.assertEqual(
+            response.data["results"][0]["id"],
+            upcoming.id,
         )
