@@ -2,6 +2,29 @@ from django.conf import settings
 from django.db import models
 
 
+class Company(models.Model):
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="companies",
+    )
+    name = models.CharField(max_length=120)
+    website = models.URLField(blank=True)
+    location = models.CharField(max_length=120, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["name"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["owner", "name"],
+                name="unique_company_per_owner",
+            )
+        ]
+
+    def __str__(self):
+        return self.name
+
 class Application(models.Model):
     class Status(models.TextChoices):
         WISHLIST = "WISHLIST", "Wishlist"
@@ -20,7 +43,11 @@ class Application(models.Model):
         on_delete=models.CASCADE,
         related_name="applications",
     )
-    company = models.CharField(max_length=120)
+    company = models.ForeignKey(
+        Company,
+        on_delete=models.PROTECT,
+        related_name="applications",
+    )
     position = models.CharField(max_length=120)
     status = models.CharField(
         max_length=20,

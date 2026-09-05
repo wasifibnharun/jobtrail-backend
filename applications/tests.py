@@ -3,7 +3,7 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from .models import Application
+from .models import Application, Company
 
 
 User = get_user_model()
@@ -154,15 +154,24 @@ class ApplicationAPITests(APITestCase):
         self.client.force_authenticate(user=self.user)
 
     def create_application(self, owner=None, **changes):
+        application_owner = owner or self.user
+        company_name = changes.pop("company", "Brain Station 23")
+
+        company, _ = Company.objects.get_or_create(
+            owner=application_owner,
+            name=company_name,
+        )
+
         data = {
-            "owner": owner or self.user,
-            "company": "Brain Station 23",
+            "owner": application_owner,
+            "company": company,
             "position": "Backend Developer",
             "status": Application.Status.WISHLIST,
             "job_type": Application.JobType.ONSITE,
             "expected_salary": 45000,
         }
         data.update(changes)
+
         return Application.objects.create(**data)
 
     def test_unauthenticated_requests_return_401(self):
@@ -215,6 +224,16 @@ class ApplicationAPITests(APITestCase):
             status.HTTP_200_OK,
         )
 
+        self.assertEqual(
+            retrieve_response.data["company"],
+            "Brain Station 23",
+        )
+        self.assertEqual(application.company.name, "Brain Station 23")
+        self.assertEqual(
+            Company.objects.filter(owner=self.user).count(),
+            1,
+        )
+
         update_response = self.client.patch(
             detail_url,
             {
@@ -227,8 +246,12 @@ class ApplicationAPITests(APITestCase):
         self.assertEqual(update_response.status_code, status.HTTP_200_OK)
 
         application.refresh_from_db()
-        self.assertEqual(application.company, "Updated Company")
+        self.assertEqual(application.company.name, "Updated Company")
         self.assertEqual(application.owner, self.user)
+        self.assertEqual(
+            Company.objects.filter(owner=self.user).count(),
+            2,
+        )
 
         delete_response = self.client.delete(detail_url)
         self.assertEqual(
@@ -390,4 +413,108 @@ class ApplicationAPITests(APITestCase):
                 "offer": 0,
                 "rejected": 0,
             },
+        )
+
+class CompanyAPITests(APITestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(
+            username="company-owner",
+            email="company-owner@example.com",
+            password="strongpass123",
+        )
+        self.other_user = User.objects.create_user(
+            username="other-company-owner",
+            email="other-company@example.com",
+            password="strongpass123",
+        )
+        self.client.force_authenticate(user=self.user)
+
+    def test_companies_are_owner_scoped_with_application_counts(self):
+        company = Company.objects.create(
+            owner=self.user,
+            name="Brain Station 23",
+            website="https://brainstation-23.com",
+            location="Dhaka",
+        )
+        Company.objects.create(
+            owner=self.other_user,
+            name="Private Company",
+        )
+        Application.objects.create(
+            owner=self.user,
+            company=company,
+            position="Backend Developer",
+        )
+
+        response = self.client.get(reverse("company-list"))
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["count"], 1)
+        self.assertEqual(
+            response.data["results"][0]["name"],
+            "Brain Station 23",
+        )
+        self.assertEqual(
+            response.data["results"][0]["applications_count"],
+            1,
+        )
+
+    def test_company_crud_validation_and_protected_deletion(self):
+        create_response = self.client.post(
+            reverse("company-list"),
+            {
+                "name": "Chaldal",
+                "website": "https://chaldal.com",
+                "location": "Dhaka",
+                "owner": self.other_user.id,
+            },
+            format="json",
+        )
+
+        self.assertEqual(
+            create_response.status_code,
+            status.HTTP_201_CREATED,
+        )
+
+        company = Company.objects.get(id=create_response.data["id"])
+        self.assertEqual(company.owner, self.user)
+
+        duplicate_response = self.client.post(
+            reverse("company-list"),
+            {"name": "chaldal"},
+            format="json",
+        )
+        self.assertEqual(
+            duplicate_response.status_code,
+            status.HTTP_400_BAD_REQUEST,
+        )
+
+        Application.objects.create(
+            owner=self.user,
+            company=company,
+            position="Python Developer",
+        )
+
+        delete_response = self.client.delete(
+            reverse("company-detail", args=[company.id])
+        )
+        self.assertEqual(
+            delete_response.status_code,
+            status.HTTP_400_BAD_REQUEST,
+        )
+        self.assertTrue(Company.objects.filter(id=company.id).exists())
+
+    def test_other_users_company_returns_404(self):
+        company = Company.objects.create(
+            owner=self.other_user,
+            name="Other Company",
+        )
+
+        response = self.client.get(
+            reverse("company-detail", args=[company.id])
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_404_NOT_FOUND,
         )

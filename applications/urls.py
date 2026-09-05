@@ -5,7 +5,12 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 
-from .views import ApplicationViewSet, RegisterView, StatsView
+from .views import (
+  ApplicationViewSet,
+  RegisterView,
+  StatsView,
+  CompanyViewSet
+)
 
 
 router = DefaultRouter()
@@ -13,6 +18,11 @@ router.register(
     "applications",
     ApplicationViewSet,
     basename="application",
+)
+router.register(
+    "companies",
+    CompanyViewSet,
+    basename="company",
 )
 
 urlpatterns = [
