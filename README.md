@@ -2,6 +2,10 @@
 
 JobTrail is a REST API for tracking job applications. Authenticated users can create, view, update, delete, filter, search, and organize their own applications. Each user can only access their own records.
 
+## Related Repository
+
+- [JobTrail Frontend](https://github.com/wasifibnharun/jobtrail-frontend)
+
 ## Technology Stack
 
 - Python
