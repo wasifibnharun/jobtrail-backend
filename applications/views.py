@@ -22,6 +22,8 @@ from django.http import FileResponse
 from django.utils.text import slugify
 from rest_framework import status
 from rest_framework.exceptions import NotFound
+import csv
+from django.http import FileResponse, HttpResponse
 
 
 User = get_user_model()
@@ -180,6 +182,58 @@ class ApplicationViewSet(viewsets.ModelViewSet):
             as_attachment=True,
             filename=filename,
         )
+
+    @action(detail=False, methods=["get"], url_path="export")
+    def export(self, request):
+        applications = self.filter_queryset(self.get_queryset())
+
+        response = HttpResponse(
+            content_type="text/csv; charset=utf-8",
+        )
+        response["Content-Disposition"] = (
+            'attachment; filename="jobtrail-applications.csv"'
+        )
+
+        # UTF-8 BOM helps Excel display Unicode company names correctly.
+        response.write("\ufeff")
+
+        writer = csv.writer(response)
+        writer.writerow(
+            [
+                "Company",
+                "Position",
+                "Status",
+                "Job Type",
+                "Applied On",
+                "Expected Salary",
+                "Job Link",
+                "Notes",
+                "Created At",
+                "Updated At",
+            ]
+        )
+
+        for application in applications.iterator():
+            writer.writerow(
+                [
+                    application.company.name,
+                    application.position,
+                    application.get_status_display(),
+                    application.get_job_type_display(),
+                    application.applied_on or "",
+                    (
+                        application.expected_salary
+                        if application.expected_salary is not None
+                        else ""
+                    ),
+                    application.job_link,
+                    application.notes,
+                    application.created_at.isoformat(),
+                    application.updated_at.isoformat(),
+                ]
+            )
+
+        return response
 
 
 class StatsView(APIView):

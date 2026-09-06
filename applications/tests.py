@@ -13,6 +13,9 @@ from pathlib import Path
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import override_settings
 
+import csv
+from io import StringIO
+
 
 User = get_user_model()
 
@@ -188,6 +191,14 @@ class ApplicationAPITests(APITestCase):
         list_response = self.client.get(reverse("application-list"))
         stats_response = self.client.get(reverse("stats"))
 
+        export_response = self.client.get(
+            reverse("application-export")
+        )
+
+        self.assertEqual(
+            export_response.status_code,
+            status.HTTP_401_UNAUTHORIZED,
+        )
         self.assertEqual(
             list_response.status_code,
             status.HTTP_401_UNAUTHORIZED,
@@ -455,6 +466,76 @@ class ApplicationAPITests(APITestCase):
             responses[exactly_fourteen_days.id]["needs_follow_up"]
         )
         self.assertFalse(responses[wishlist.id]["needs_follow_up"])
+
+    def test_csv_export_respects_filters_ordering_and_owner(self):
+            first = self.create_application(
+                company="Django Labs",
+                position="Junior Django Developer",
+                status=Application.Status.APPLIED,
+                expected_salary=40000,
+            )
+            second = self.create_application(
+                company="Django Works",
+                position="Senior Django Developer",
+                status=Application.Status.APPLIED,
+                expected_salary=80000,
+            )
+    
+            self.create_application(
+                company="Rejected Company",
+                position="Django Developer",
+                status=Application.Status.REJECTED,
+            )
+            self.create_application(
+                owner=self.other_user,
+                company="Private Django Company",
+                position="Hidden Django Developer",
+                status=Application.Status.APPLIED,
+            )
+    
+            response = self.client.get(
+                reverse("application-export"),
+                {
+                    "status": "APPLIED",
+                    "search": "django",
+                    "ordering": "expected_salary",
+                },
+            )
+    
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+            self.assertTrue(
+                response["Content-Type"].startswith("text/csv")
+            )
+            self.assertIn(
+                "jobtrail-applications.csv",
+                response["Content-Disposition"],
+            )
+    
+            content = response.content.decode("utf-8-sig")
+            rows = list(csv.reader(StringIO(content)))
+    
+            self.assertEqual(
+                rows[0],
+                [
+                    "Company",
+                    "Position",
+                    "Status",
+                    "Job Type",
+                    "Applied On",
+                    "Expected Salary",
+                    "Job Link",
+                    "Notes",
+                    "Created At",
+                    "Updated At",
+                ],
+            )
+            self.assertEqual(len(rows), 3)
+            self.assertEqual(
+                [row[1] for row in rows[1:]],
+                [first.position, second.position],
+            )
+            self.assertNotIn("Hidden Django Developer", content)
+            self.assertNotIn("Rejected Company", content)
 
 class CompanyAPITests(APITestCase):
     def setUp(self):
