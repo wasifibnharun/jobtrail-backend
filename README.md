@@ -2,6 +2,13 @@
 
 JobTrail is a PostgreSQL-backed REST API for managing a private job search. Each authenticated user can track companies, applications, interviews, CV attachments, follow-ups, and reporting data without exposing records owned by another user.
 
+## Live Deployment
+
+- Frontend: [jobtrail-bice.vercel.app](https://jobtrail-bice.vercel.app/)
+- Backend API: [jobtrail-ghfp.onrender.com/api/](https://jobtrail-ghfp.onrender.com/api/)
+- Demo username: `demo`
+- Demo password: `DemoPass123!`
+
 ## Related Repository
 
 - [JobTrail Frontend](https://github.com/wasifibnharun/jobtrail-frontend)
