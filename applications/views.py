@@ -1,36 +1,37 @@
-from django.contrib.auth import get_user_model
-from django.db.models import Count
-from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import filters, generics, viewsets
-from rest_framework.permissions import AllowAny, IsAuthenticated
-from rest_framework.response import Response
-from rest_framework.views import APIView
-from django.db.models.deletion import ProtectedError
-from rest_framework.exceptions import ValidationError
-from rest_framework.decorators import action
-from .models import Application, Company, Interview
-from .serializers import (
-    ApplicationSerializer,
-    RegisterSerializer,
-    CompanySerializer,
-    InterviewSerializer,
-    StatsSerializer
-)
-from django.utils import timezone
+import csv
+from datetime import date
 from pathlib import Path
 
-from django.http import FileResponse
-from django.utils.text import slugify
-from rest_framework import status
-from rest_framework.exceptions import NotFound
-import csv
+from django.contrib.auth import get_user_model
+from django.db.models.deletion import ProtectedError
+from django.db.models import Count
+from django.db.models.functions import TruncMonth
 from django.http import FileResponse, HttpResponse
+from django.utils import timezone
+from django.utils.text import slugify
+from django_filters.rest_framework import DjangoFilterBackend
+from drf_spectacular.types import OpenApiTypes
+from drf_spectacular.utils import OpenApiResponse, extend_schema
+from rest_framework import filters, generics, viewsets
+from rest_framework.decorators import action
+from rest_framework.exceptions import NotFound, ValidationError
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.response import Response
+from rest_framework import status
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
 )
-from drf_spectacular.types import OpenApiTypes
-from drf_spectacular.utils import OpenApiResponse, extend_schema
+from rest_framework.views import APIView
+
+from .models import Application, Company, Interview
+from .serializers import (
+    ApplicationSerializer,
+    CompanySerializer,
+    InterviewSerializer,
+    RegisterSerializer,
+    StatsSerializer,
+)
 
 
 User = get_user_model()
@@ -306,7 +307,8 @@ class StatsView(APIView):
     def get(self, request):
         rows = (
             Application.objects.filter(owner=request.user)
-            .values("status")
+            .annotate(month=TruncMonth("applied_on"))
+            .values("status", "month")
             .annotate(count=Count("id"))
         )
 
@@ -315,12 +317,39 @@ class StatsView(APIView):
             for status in Application.Status
         }
 
+        month_counts = {}
+
         for row in rows:
-            counts[row["status"].lower()] = row["count"]
+            counts[row["status"].lower()] += row["count"]
+
+            if row["month"] is not None:
+                month_counts[row["month"]] = (
+                    month_counts.get(row["month"], 0)
+                    + row["count"]
+                )
+
+        today = timezone.localdate()
+        current_month_index = today.year * 12 + today.month - 1
+        months = []
+
+        for months_ago in range(5, -1, -1):
+            month_index = current_month_index - months_ago
+            month = date(
+                year=month_index // 12,
+                month=month_index % 12 + 1,
+                day=1,
+            )
+            months.append(
+                {
+                    "month": month.strftime("%Y-%m"),
+                    "count": month_counts.get(month, 0),
+                }
+            )
 
         return Response(
             {
                 "total": sum(counts.values()),
                 **counts,
+                "monthly": months,
             }
         )

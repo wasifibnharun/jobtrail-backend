@@ -1,19 +1,15 @@
+from datetime import timedelta
+
 from django.contrib.auth import get_user_model
-from rest_framework import serializers
 from django.core.validators import FileExtensionValidator
+from django.utils import timezone
+from rest_framework import serializers
 
 from .models import Application, Company, Interview, validate_cv_size
-from datetime import timedelta
-from django.utils import timezone
 
 
 User = get_user_model()
 
-
-# def get_applications_count(self, company) :
-# def get_needs_follow_up(self, application) :
-# def get_has_cv(self, application) -> bool:
-# def get_cv_download_url(self, application) :
 
 class RegisterSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(required=True)
@@ -255,6 +251,11 @@ class InterviewSerializer(serializers.ModelSerializer):
 
         return fields
 
+class MonthlyApplicationSerializer(serializers.Serializer):
+    month = serializers.CharField(read_only=True)
+    count = serializers.IntegerField(read_only=True)
+
+
 class StatsSerializer(serializers.Serializer):
     total = serializers.IntegerField(read_only=True)
     wishlist = serializers.IntegerField(read_only=True)
@@ -262,3 +263,4 @@ class StatsSerializer(serializers.Serializer):
     interview = serializers.IntegerField(read_only=True)
     offer = serializers.IntegerField(read_only=True)
     rejected = serializers.IntegerField(read_only=True)
+    monthly = MonthlyApplicationSerializer(many=True, read_only=True)

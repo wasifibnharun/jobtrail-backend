@@ -235,6 +235,69 @@ paths:
           description: No response body
         '404':
           description: No CV attachment was found.
+  /api/applications/board/:
+    get:
+      operationId: applications_board_list
+      description: Return all of the authenticated user's applications for the Kanban
+        board.
+      parameters:
+      - in: query
+        name: job_type
+        schema:
+          type: string
+          enum:
+          - HYBRID
+          - ONSITE
+          - REMOTE
+        description: |-
+          * `ONSITE` - Onsite
+          * `REMOTE` - Remote
+          * `HYBRID` - Hybrid
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      - in: query
+        name: status
+        schema:
+          type: string
+          enum:
+          - APPLIED
+          - INTERVIEW
+          - OFFER
+          - REJECTED
+          - WISHLIST
+        description: |-
+          * `WISHLIST` - Wishlist
+          * `APPLIED` - Applied
+          * `INTERVIEW` - Interview
+          * `OFFER` - Offer
+          * `REJECTED` - Rejected
+      tags:
+      - applications
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedApplicationList'
+          description: ''
   /api/applications/export/:
     get:
       operationId: applications_export_retrieve
@@ -949,6 +1012,18 @@ components:
         * `ONSITE` - Onsite
         * `VIDEO` - Video
         * `PHONE` - Phone
+    MonthlyApplication:
+      type: object
+      properties:
+        month:
+          type: string
+          readOnly: true
+        count:
+          type: integer
+          readOnly: true
+      required:
+      - count
+      - month
     PaginatedApplicationList:
       type: object
       required:
@@ -1164,9 +1239,15 @@ components:
         rejected:
           type: integer
           readOnly: true
+        monthly:
+          type: array
+          items:
+            $ref: '#/components/schemas/MonthlyApplication'
+          readOnly: true
       required:
       - applied
       - interview
+      - monthly
       - offer
       - rejected
       - total

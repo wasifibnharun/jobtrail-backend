@@ -444,10 +444,25 @@ class ApplicationAPITests(APITestCase):
             status.HTTP_404_NOT_FOUND,
         )
 
-    def test_stats_use_one_query_and_include_zero_values(self):
-        self.create_application(status=Application.Status.APPLIED)
-        self.create_application(status=Application.Status.APPLIED)
-        self.create_application(status=Application.Status.INTERVIEW)
+    def test_stats_use_one_query_and_include_chart_data(self):
+        today = timezone.localdate()
+        current_month = today.replace(day=1)
+        previous_month = (
+            current_month - timedelta(days=1)
+        ).replace(day=1)
+
+        self.create_application(
+            status=Application.Status.APPLIED,
+            applied_on=current_month,
+        )
+        self.create_application(
+            status=Application.Status.APPLIED,
+            applied_on=previous_month,
+        )
+        self.create_application(
+            status=Application.Status.INTERVIEW,
+            applied_on=today,
+        )
         self.create_application(
             owner=self.other_user,
             status=Application.Status.OFFER,
@@ -457,16 +472,25 @@ class ApplicationAPITests(APITestCase):
             response = self.client.get(reverse("stats"))
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["total"], 3)
+        self.assertEqual(response.data["wishlist"], 0)
+        self.assertEqual(response.data["applied"], 2)
+        self.assertEqual(response.data["interview"], 1)
+        self.assertEqual(response.data["offer"], 0)
+        self.assertEqual(response.data["rejected"], 0)
+        self.assertEqual(len(response.data["monthly"]), 6)
+
+        monthly_counts = {
+            item["month"]: item["count"]
+            for item in response.data["monthly"]
+        }
         self.assertEqual(
-            response.data,
-            {
-                "total": 3,
-                "wishlist": 0,
-                "applied": 2,
-                "interview": 1,
-                "offer": 0,
-                "rejected": 0,
-            },
+            monthly_counts[current_month.strftime("%Y-%m")],
+            2,
+        )
+        self.assertEqual(
+            monthly_counts[previous_month.strftime("%Y-%m")],
+            1,
         )
 
     def test_needs_follow_up_is_computed_from_status_and_date(self):
