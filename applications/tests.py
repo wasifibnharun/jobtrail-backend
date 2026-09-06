@@ -613,6 +613,30 @@ class ApplicationAPITests(APITestCase):
         )
         self.assertIn("detail", error_body["data"])
 
+    def test_board_returns_all_owner_applications_without_pagination(self):
+        for number in range(11):
+            self.create_application(
+                company=f"Board Company {number}",
+                position=f"Developer {number}",
+            )
+
+        self.create_application(
+            owner=self.other_user,
+            company="Hidden Board Company",
+        )
+
+        response = self.client.get(reverse("application-board"))
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 11)
+        self.assertNotIn(
+            "Hidden Board Company",
+            {
+                application["company"]
+                for application in response.data
+            },
+        )
+
 class CompanyAPITests(APITestCase):
     def setUp(self):
         self.user = User.objects.create_user(

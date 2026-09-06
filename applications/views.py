@@ -281,6 +281,23 @@ class ApplicationViewSet(viewsets.ModelViewSet):
 
         return response
 
+    @extend_schema(
+        description=(
+            "Return all of the authenticated user's applications "
+            "for the Kanban board."
+        ),
+        responses=ApplicationSerializer(many=True),
+    )
+    @action(detail=False, methods=["get"], url_path="board")
+    def board(self, request):
+        applications = (
+            self.filter_queryset(self.get_queryset())
+            .order_by("status", "-updated_at")
+        )
+        serializer = self.get_serializer(applications, many=True)
+
+        return Response(serializer.data)
+
 
 class StatsView(APIView):
     permission_classes = [IsAuthenticated]
