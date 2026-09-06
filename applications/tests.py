@@ -3,9 +3,15 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from .models import Application, Company, Interview
+from .models import MAX_CV_SIZE, Application, Company, Interview
 from django.utils import timezone
 from datetime import timedelta
+
+import tempfile
+from pathlib import Path
+
+from django.core.files.uploadedfile import SimpleUploadedFile
+from django.test import override_settings
 
 
 User = get_user_model()
@@ -695,3 +701,178 @@ class InterviewAPITests(APITestCase):
             response.data["results"][0]["id"],
             upcoming.id,
         )
+
+class CVAttachmentAPITests(APITestCase):
+    def setUp(self):
+        self.media_directory = tempfile.TemporaryDirectory()
+        self.media_override = override_settings(
+            MEDIA_ROOT=self.media_directory.name
+        )
+        self.media_override.enable()
+
+        self.user = User.objects.create_user(
+            username="cv-owner",
+            email="cv-owner@example.com",
+            password="strongpass123",
+        )
+        self.other_user = User.objects.create_user(
+            username="other-cv-owner",
+            email="other-cv@example.com",
+            password="strongpass123",
+        )
+        self.client.force_authenticate(user=self.user)
+
+    def tearDown(self):
+        self.media_override.disable()
+        self.media_directory.cleanup()
+
+    def application_payload(self, cv):
+        return {
+            "company": "JobTrail Labs",
+            "position": "Django Developer",
+            "status": "APPLIED",
+            "job_type": "REMOTE",
+            "cv": cv,
+        }
+
+    def test_cv_upload_download_and_owner_protection(self):
+        content = b"%PDF-1.4 example CV"
+        cv = SimpleUploadedFile(
+            "resume.pdf",
+            content,
+            content_type="application/pdf",
+        )
+
+        create_response = self.client.post(
+            reverse("application-list"),
+            self.application_payload(cv),
+            format="multipart",
+        )
+
+        self.assertEqual(
+            create_response.status_code,
+            status.HTTP_201_CREATED,
+        )
+        self.assertTrue(create_response.data["has_cv"])
+        self.assertIsNotNone(
+            create_response.data["cv_download_url"]
+        )
+
+        application = Application.objects.get(
+            id=create_response.data["id"]
+        )
+        self.assertTrue(application.cv.name.endswith(".pdf"))
+        self.assertIn(
+            f"cvs/user_{self.user.id}/",
+            application.cv.name,
+        )
+
+        cv_url = reverse("application-cv", args=[application.id])
+        download_response = self.client.get(cv_url)
+
+        self.assertEqual(
+            download_response.status_code,
+            status.HTTP_200_OK,
+        )
+        self.assertEqual(
+            b"".join(download_response.streaming_content),
+            content,
+        )
+        self.assertIn(
+            "attachment;",
+            download_response["Content-Disposition"],
+        )
+
+        self.client.force_authenticate(user=self.other_user)
+        forbidden_response = self.client.get(cv_url)
+
+        self.assertEqual(
+            forbidden_response.status_code,
+            status.HTTP_404_NOT_FOUND,
+        )
+
+    def test_cv_extension_and_size_validation(self):
+        invalid_extension = SimpleUploadedFile(
+            "resume.exe",
+            b"not a CV",
+            content_type="application/octet-stream",
+        )
+
+        extension_response = self.client.post(
+            reverse("application-list"),
+            self.application_payload(invalid_extension),
+            format="multipart",
+        )
+
+        self.assertEqual(
+            extension_response.status_code,
+            status.HTTP_400_BAD_REQUEST,
+        )
+        self.assertIn("cv", extension_response.data)
+
+        oversized = SimpleUploadedFile(
+            "large-resume.pdf",
+            b"x" * (MAX_CV_SIZE + 1),
+            content_type="application/pdf",
+        )
+
+        size_response = self.client.post(
+            reverse("application-list"),
+            self.application_payload(oversized),
+            format="multipart",
+        )
+
+        self.assertEqual(
+            size_response.status_code,
+            status.HTTP_400_BAD_REQUEST,
+        )
+        self.assertIn("cv", size_response.data)
+
+    def test_replacing_and_deleting_cv_removes_stored_files(self):
+        first_cv = SimpleUploadedFile(
+            "first.pdf",
+            b"first CV",
+            content_type="application/pdf",
+        )
+        create_response = self.client.post(
+            reverse("application-list"),
+            self.application_payload(first_cv),
+            format="multipart",
+        )
+
+        application = Application.objects.get(
+            id=create_response.data["id"]
+        )
+        first_path = Path(application.cv.path)
+        self.assertTrue(first_path.exists())
+
+        second_cv = SimpleUploadedFile(
+            "second.pdf",
+            b"second CV",
+            content_type="application/pdf",
+        )
+        update_response = self.client.patch(
+            reverse("application-detail", args=[application.id]),
+            {"cv": second_cv},
+            format="multipart",
+        )
+
+        self.assertEqual(
+            update_response.status_code,
+            status.HTTP_200_OK,
+        )
+        self.assertFalse(first_path.exists())
+
+        application.refresh_from_db()
+        second_path = Path(application.cv.path)
+        self.assertTrue(second_path.exists())
+
+        delete_response = self.client.delete(
+            reverse("application-detail", args=[application.id])
+        )
+
+        self.assertEqual(
+            delete_response.status_code,
+            status.HTTP_204_NO_CONTENT,
+        )
+        self.assertFalse(second_path.exists())

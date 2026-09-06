@@ -1,6 +1,28 @@
 from django.conf import settings
 from django.db import models
+from pathlib import Path
+from uuid import uuid4
 
+from django.core.exceptions import ValidationError
+from django.core.validators import FileExtensionValidator
+
+MAX_CV_SIZE = 5 * 1024 * 1024
+
+
+def validate_cv_size(uploaded_file):
+    if uploaded_file.size > MAX_CV_SIZE:
+        raise ValidationError(
+            "CV file size cannot exceed 5 MB."
+        )
+
+
+def cv_upload_path(application, filename):
+    extension = Path(filename).suffix.lower()
+
+    return (
+        f"cvs/user_{application.owner_id}/"
+        f"{uuid4().hex}{extension}"
+    )
 
 class Company(models.Model):
     owner = models.ForeignKey(
@@ -104,6 +126,16 @@ class Application(models.Model):
     expected_salary = models.PositiveIntegerField(null=True, blank=True)
     job_link = models.URLField(blank=True)
     notes = models.TextField(blank=True)
+    cv = models.FileField(
+        upload_to=cv_upload_path,
+        validators=[
+            FileExtensionValidator(
+                allowed_extensions=["pdf", "doc", "docx"]
+            ),
+            validate_cv_size,
+        ],
+        blank=True,
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

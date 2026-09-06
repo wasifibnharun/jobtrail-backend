@@ -1,7 +1,8 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
+from django.core.validators import FileExtensionValidator
 
-from .models import Application, Company, Interview
+from .models import Application, Company, Interview, validate_cv_size
 from datetime import timedelta
 from django.utils import timezone
 
@@ -78,6 +79,17 @@ class CompanySerializer(serializers.ModelSerializer):
 class ApplicationSerializer(serializers.ModelSerializer):
     company = serializers.CharField(max_length=120)
     needs_follow_up = serializers.SerializerMethodField()
+    cv = serializers.FileField(
+        write_only=True,
+        required=False,
+        allow_null=True,
+        validators=[
+            FileExtensionValidator(["pdf", "doc", "docx"]),
+            validate_cv_size,
+        ],
+    )
+    has_cv = serializers.SerializerMethodField()
+    cv_download_url = serializers.SerializerMethodField()
 
     class Meta:
         model = Application
@@ -92,6 +104,9 @@ class ApplicationSerializer(serializers.ModelSerializer):
             "expected_salary",
             "job_link",
             "notes",
+            "cv",
+            "has_cv",
+            "cv_download_url",
             "needs_follow_up",
             "created_at",
             "updated_at",
@@ -100,6 +115,8 @@ class ApplicationSerializer(serializers.ModelSerializer):
             "id",
             "owner",
             "needs_follow_up",
+            "has_cv",
+            "cv_download_url",
             "created_at",
             "updated_at",
         ]
@@ -140,6 +157,9 @@ class ApplicationSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         company_name = validated_data.pop("company", None)
+        replacing_cv = "cv" in validated_data
+        old_cv_name = instance.cv.name if instance.cv else ""
+        old_cv_storage = instance.cv.storage if instance.cv else None
 
         if company_name is not None:
             validated_data["company"] = self.resolve_company(
@@ -147,7 +167,17 @@ class ApplicationSerializer(serializers.ModelSerializer):
                 company_name,
             )
 
-        return super().update(instance, validated_data)
+        updated_application = super().update(instance, validated_data)
+
+        if (
+            replacing_cv
+            and old_cv_name
+            and old_cv_name != updated_application.cv.name
+            and old_cv_storage
+        ):
+            old_cv_storage.delete(old_cv_name)
+
+        return updated_application
 
     def get_needs_follow_up(self, application):
         if (
@@ -159,6 +189,18 @@ class ApplicationSerializer(serializers.ModelSerializer):
         follow_up_cutoff = timezone.localdate() - timedelta(days=14)
 
         return application.applied_on < follow_up_cutoff
+
+    def get_has_cv(self, application):
+        return bool(application.cv)
+
+    def get_cv_download_url(self, application):
+        if not application.cv:
+            return None
+
+        request = self.context.get("request")
+        path = f"/api/applications/{application.pk}/cv/"
+
+        return request.build_absolute_uri(path) if request else path
 
 class InterviewSerializer(serializers.ModelSerializer):
     position = serializers.CharField(

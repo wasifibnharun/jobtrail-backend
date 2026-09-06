@@ -16,6 +16,12 @@ from .serializers import (
     InterviewSerializer
 )
 from django.utils import timezone
+from pathlib import Path
+
+from django.http import FileResponse
+from django.utils.text import slugify
+from rest_framework import status
+from rest_framework.exceptions import NotFound
 
 
 User = get_user_model()
@@ -139,6 +145,41 @@ class ApplicationViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
+
+    def perform_destroy(self, instance):
+        cv_name = instance.cv.name if instance.cv else ""
+        cv_storage = instance.cv.storage if instance.cv else None
+
+        instance.delete()
+
+        if cv_name and cv_storage:
+            cv_storage.delete(cv_name)
+
+    @action(detail=True, methods=["get", "delete"], url_path="cv")
+    def cv(self, request, pk=None):
+        application = self.get_object()
+
+        if not application.cv:
+            raise NotFound("No CV is attached to this application.")
+
+        if request.method == "DELETE":
+            application.cv.delete(save=False)
+            application.cv = ""
+            application.save(update_fields=["cv"])
+
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
+        extension = Path(application.cv.name).suffix.lower()
+        filename = (
+            f"{slugify(application.company.name)}-"
+            f"{slugify(application.position)}-cv{extension}"
+        )
+
+        return FileResponse(
+            application.cv.open("rb"),
+            as_attachment=True,
+            filename=filename,
+        )
 
 
 class StatsView(APIView):
