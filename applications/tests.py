@@ -11,7 +11,8 @@ import tempfile
 from pathlib import Path
 
 from django.core.files.uploadedfile import SimpleUploadedFile
-from django.test import override_settings
+from django.core.management import call_command
+from django.test import TestCase,override_settings
 
 import csv
 from io import StringIO
@@ -1069,26 +1070,53 @@ class APIDocumentationTests(APITestCase):
             schema_response.data["paths"],
         )
 
-    class APIDocumentationTests(APITestCase):
-        def test_schema_swagger_and_redoc_are_public(self):
-            schema_response = self.client.get(reverse("schema"))
-            swagger_response = self.client.get(reverse("swagger-ui"))
-            redoc_response = self.client.get(reverse("redoc"))
+class APIDocumentationTests(APITestCase):
+    def test_schema_swagger_and_redoc_are_public(self):
+        schema_response = self.client.get(reverse("schema"))
+        swagger_response = self.client.get(reverse("swagger-ui"))
+        redoc_response = self.client.get(reverse("redoc"))
 
-            self.assertEqual(
-                schema_response.status_code,
-                status.HTTP_200_OK,
-            )
-            self.assertEqual(
-                swagger_response.status_code,
-                status.HTTP_200_OK,
-            )
-            self.assertEqual(
-                redoc_response.status_code,
-                status.HTTP_200_OK,
-            )
-            self.assertIn("paths", schema_response.data)
-            self.assertIn(
-                "/api/applications/",
-                schema_response.data["paths"],
-            )
+        self.assertEqual(schema_response.status_code, status.HTTP_200_OK)
+        self.assertEqual(swagger_response.status_code, status.HTTP_200_OK)
+        self.assertEqual(redoc_response.status_code, status.HTTP_200_OK)
+        self.assertIn(
+            "/api/applications/",
+            schema_response.data["paths"],
+        )
+
+
+class SeedDemoCommandTests(TestCase):
+    def test_seed_demo_is_complete_and_idempotent(self):
+        output = StringIO()
+        options = {
+            "username": "demo-test",
+            "email": "demo-test@example.com",
+            "password": "DemoPass123!",
+            "stdout": output,
+        }
+
+        call_command("seed_demo", **options)
+
+        user = User.objects.get(username="demo-test")
+
+        self.assertTrue(user.check_password("DemoPass123!"))
+        self.assertEqual(user.companies.count(), 5)
+        self.assertEqual(user.applications.count(), 15)
+        self.assertEqual(
+            Interview.objects.filter(
+                application__owner=user
+            ).count(),
+            3,
+        )
+        self.assertIn("Seeded demo-test", output.getvalue())
+
+        call_command("seed_demo", **options)
+
+        self.assertEqual(user.companies.count(), 5)
+        self.assertEqual(user.applications.count(), 15)
+        self.assertEqual(
+            Interview.objects.filter(
+                application__owner=user
+            ).count(),
+            3,
+        )
