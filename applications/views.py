@@ -13,7 +13,8 @@ from .serializers import (
     ApplicationSerializer,
     RegisterSerializer,
     CompanySerializer,
-    InterviewSerializer
+    InterviewSerializer,
+    StatsSerializer
 )
 from django.utils import timezone
 from pathlib import Path
@@ -28,6 +29,8 @@ from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
 )
+from drf_spectacular.types import OpenApiTypes
+from drf_spectacular.utils import OpenApiResponse, extend_schema
 
 
 User = get_user_model()
@@ -46,6 +49,7 @@ class RegisterView(generics.CreateAPIView):
     throttle_scope = "auth"
 
 class CompanyViewSet(viewsets.ModelViewSet):
+    queryset = Company.objects.none()
     serializer_class = CompanySerializer
     permission_classes = [IsAuthenticated]
     filter_backends = [
@@ -79,6 +83,7 @@ class CompanyViewSet(viewsets.ModelViewSet):
             ) from error
 
 class InterviewViewSet(viewsets.ModelViewSet):
+    queryset = Interview.objects.none()
     serializer_class = InterviewSerializer
     permission_classes = [IsAuthenticated]
     filter_backends = [
@@ -134,6 +139,7 @@ class InterviewViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
 class ApplicationViewSet(viewsets.ModelViewSet):
+    queryset = Application.objects.none()
     serializer_class = ApplicationSerializer
     permission_classes = [IsAuthenticated]
     filter_backends = [
@@ -168,6 +174,26 @@ class ApplicationViewSet(viewsets.ModelViewSet):
         if cv_name and cv_storage:
             cv_storage.delete(cv_name)
 
+    @extend_schema(
+        methods=["GET"],
+        description="Download the application's private CV attachment.",
+        responses={
+            (200, "application/octet-stream"): OpenApiTypes.BINARY,
+            404: OpenApiResponse(
+                description="No CV attachment was found.",
+            ),
+        },
+    )
+    @extend_schema(
+        methods=["DELETE"],
+        description="Delete the application's CV attachment.",
+        responses={
+            204: None,
+            404: OpenApiResponse(
+                description="No CV attachment was found.",
+            ),
+        },
+    )
     @action(detail=True, methods=["get", "delete"], url_path="cv")
     def cv(self, request, pk=None):
         application = self.get_object()
@@ -194,6 +220,15 @@ class ApplicationViewSet(viewsets.ModelViewSet):
             filename=filename,
         )
 
+    @extend_schema(
+        description=(
+            "Export the authenticated user's applications as CSV. "
+            "List filters, search, and ordering are supported."
+        ),
+        responses={
+            (200, "text/csv"): OpenApiTypes.BINARY,
+        },
+    )
     @action(detail=False, methods=["get"], url_path="export")
     def export(self, request):
         applications = self.filter_queryset(self.get_queryset())
@@ -250,6 +285,7 @@ class ApplicationViewSet(viewsets.ModelViewSet):
 class StatsView(APIView):
     permission_classes = [IsAuthenticated]
 
+    @extend_schema(responses=StatsSerializer)
     def get(self, request):
         rows = (
             Application.objects.filter(owner=request.user)

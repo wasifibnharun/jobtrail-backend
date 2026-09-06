@@ -1,0 +1,2797 @@
+{
+  "info": {
+    "_postman_id": "0aa0764e-d479-4429-8407-ff5e2668c030",
+    "name": "JobTrail API",
+    "description": "REST API for tracking companies, job applications, CV attachments, and interviews. JSON responses use the {success, message, data} envelope.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "39647105"
+  },
+  "item": [
+    {
+      "name": "api",
+      "item": [
+        {
+          "name": "applications",
+          "item": [
+            {
+              "name": "{id}",
+              "item": [
+                {
+                  "name": "cv",
+                  "item": [
+                    {
+                      "name": "applications cv retrieve",
+                      "request": {
+                        "auth": {
+                          "type": "bearer",
+                          "bearer": [
+                            {
+                              "key": "token",
+                              "value": "{{bearerToken}}",
+                              "type": "string"
+                            }
+                          ]
+                        },
+                        "method": "GET",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "application/octet-stream"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/api/applications/:id/cv/",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "applications",
+                            ":id",
+                            "cv",
+                            ""
+                          ],
+                          "variable": [
+                            {
+                              "key": "id",
+                              "value": "1760",
+                              "description": "A unique integer value identifying this application."
+                            }
+                          ]
+                        },
+                        "description": "Download the application's private CV attachment."
+                      },
+                      "response": [
+                        {
+                          "name": "200",
+                          "originalRequest": {
+                            "method": "GET",
+                            "header": [
+                              {
+                                "key": "Accept",
+                                "value": "application/octet-stream"
+                              },
+                              {
+                                "description": "Added as a part of security scheme: bearer",
+                                "key": "Authorization",
+                                "value": "Bearer <token>"
+                              }
+                            ],
+                            "url": {
+                              "raw": "{{baseUrl}}/api/applications/:id/cv/",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "api",
+                                "applications",
+                                ":id",
+                                "cv",
+                                ""
+                              ],
+                              "variable": [
+                                {
+                                  "key": "id",
+                                  "value": "1760",
+                                  "description": "A unique integer value identifying this application."
+                                }
+                              ]
+                            }
+                          },
+                          "status": "OK",
+                          "code": 200,
+                          "_postman_previewlanguage": "text",
+                          "header": [
+                            {
+                              "key": "Content-Type",
+                              "value": "application/octet-stream"
+                            }
+                          ],
+                          "cookie": [],
+                          "body": "string"
+                        },
+                        {
+                          "name": "No CV attachment was found.",
+                          "originalRequest": {
+                            "method": "GET",
+                            "header": [
+                              {
+                                "description": "Added as a part of security scheme: bearer",
+                                "key": "Authorization",
+                                "value": "Bearer <token>"
+                              }
+                            ],
+                            "url": {
+                              "raw": "{{baseUrl}}/api/applications/:id/cv/",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "api",
+                                "applications",
+                                ":id",
+                                "cv",
+                                ""
+                              ],
+                              "variable": [
+                                {
+                                  "key": "id",
+                                  "value": "1760",
+                                  "description": "A unique integer value identifying this application."
+                                }
+                              ]
+                            }
+                          },
+                          "status": "Not Found",
+                          "code": 404,
+                          "_postman_previewlanguage": "text",
+                          "header": [],
+                          "cookie": [],
+                          "body": ""
+                        }
+                      ]
+                    },
+                    {
+                      "name": "applications cv destroy",
+                      "request": {
+                        "auth": {
+                          "type": "bearer",
+                          "bearer": [
+                            {
+                              "key": "token",
+                              "value": "{{bearerToken}}",
+                              "type": "string"
+                            }
+                          ]
+                        },
+                        "method": "DELETE",
+                        "header": [],
+                        "url": {
+                          "raw": "{{baseUrl}}/api/applications/:id/cv/",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "applications",
+                            ":id",
+                            "cv",
+                            ""
+                          ],
+                          "variable": [
+                            {
+                              "key": "id",
+                              "value": "1760",
+                              "description": "A unique integer value identifying this application."
+                            }
+                          ]
+                        },
+                        "description": "Delete the application's CV attachment."
+                      },
+                      "response": [
+                        {
+                          "name": "No response body",
+                          "originalRequest": {
+                            "method": "DELETE",
+                            "header": [
+                              {
+                                "description": "Added as a part of security scheme: bearer",
+                                "key": "Authorization",
+                                "value": "Bearer <token>"
+                              }
+                            ],
+                            "url": {
+                              "raw": "{{baseUrl}}/api/applications/:id/cv/",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "api",
+                                "applications",
+                                ":id",
+                                "cv",
+                                ""
+                              ],
+                              "variable": [
+                                {
+                                  "key": "id",
+                                  "value": "1760",
+                                  "description": "A unique integer value identifying this application."
+                                }
+                              ]
+                            }
+                          },
+                          "status": "No Content",
+                          "code": 204,
+                          "_postman_previewlanguage": "text",
+                          "header": [],
+                          "cookie": [],
+                          "body": ""
+                        },
+                        {
+                          "name": "No CV attachment was found.",
+                          "originalRequest": {
+                            "method": "DELETE",
+                            "header": [
+                              {
+                                "description": "Added as a part of security scheme: bearer",
+                                "key": "Authorization",
+                                "value": "Bearer <token>"
+                              }
+                            ],
+                            "url": {
+                              "raw": "{{baseUrl}}/api/applications/:id/cv/",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "api",
+                                "applications",
+                                ":id",
+                                "cv",
+                                ""
+                              ],
+                              "variable": [
+                                {
+                                  "key": "id",
+                                  "value": "1760",
+                                  "description": "A unique integer value identifying this application."
+                                }
+                              ]
+                            }
+                          },
+                          "status": "Not Found",
+                          "code": 404,
+                          "_postman_previewlanguage": "text",
+                          "header": [],
+                          "cookie": [],
+                          "body": ""
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "applications retrieve",
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{bearerToken}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/api/applications/:id/",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "applications",
+                        ":id",
+                        ""
+                      ],
+                      "variable": [
+                        {
+                          "key": "id",
+                          "value": "1760",
+                          "description": "A unique integer value identifying this application."
+                        }
+                      ]
+                    }
+                  },
+                  "response": [
+                    {
+                      "name": "200",
+                      "originalRequest": {
+                        "method": "GET",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/api/applications/:id/",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "applications",
+                            ":id",
+                            ""
+                          ],
+                          "variable": [
+                            {
+                              "key": "id",
+                              "value": "1760",
+                              "description": "A unique integer value identifying this application."
+                            }
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "body": "{\n  \"company\": \"string\",\n  \"created_at\": \"1967-02-21T10:27:56.656Z\",\n  \"cv_download_url\": \"string\",\n  \"has_cv\": true,\n  \"id\": 1959,\n  \"needs_follow_up\": false,\n  \"owner\": 766,\n  \"position\": \"string\",\n  \"updated_at\": \"1998-01-12T03:36:46.996Z\",\n  \"status\": \"WISHLIST\",\n  \"job_type\": \"HYBRID\",\n  \"applied_on\": \"1970-08-19\",\n  \"expected_salary\": 536599388,\n  \"job_link\": \"string\",\n  \"notes\": \"string\"\n}"
+                    }
+                  ]
+                },
+                {
+                  "name": "applications update",
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{bearerToken}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "PUT",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"company\": \"string\",\n  \"position\": \"string\",\n  \"status\": \"INTERVIEW\",\n  \"job_type\": \"ONSITE\",\n  \"applied_on\": \"1973-09-26\",\n  \"expected_salary\": 1723036678,\n  \"job_link\": \"string\",\n  \"notes\": \"string\",\n  \"cv\": \"doc\"\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/api/applications/:id/",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "applications",
+                        ":id",
+                        ""
+                      ],
+                      "variable": [
+                        {
+                          "key": "id",
+                          "value": "1760",
+                          "description": "A unique integer value identifying this application."
+                        }
+                      ]
+                    }
+                  },
+                  "response": [
+                    {
+                      "name": "200",
+                      "originalRequest": {
+                        "method": "PUT",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          },
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"company\": \"string\",\n  \"position\": \"string\",\n  \"status\": \"INTERVIEW\",\n  \"job_type\": \"ONSITE\",\n  \"applied_on\": \"1973-09-26\",\n  \"expected_salary\": 1723036678,\n  \"job_link\": \"string\",\n  \"notes\": \"string\",\n  \"cv\": \"doc\"\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/api/applications/:id/",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "applications",
+                            ":id",
+                            ""
+                          ],
+                          "variable": [
+                            {
+                              "key": "id",
+                              "value": "1760",
+                              "description": "A unique integer value identifying this application."
+                            }
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "body": "{\n  \"company\": \"string\",\n  \"created_at\": \"1967-02-21T10:27:56.656Z\",\n  \"cv_download_url\": \"string\",\n  \"has_cv\": true,\n  \"id\": 1959,\n  \"needs_follow_up\": false,\n  \"owner\": 766,\n  \"position\": \"string\",\n  \"updated_at\": \"1998-01-12T03:36:46.996Z\",\n  \"status\": \"WISHLIST\",\n  \"job_type\": \"HYBRID\",\n  \"applied_on\": \"1970-08-19\",\n  \"expected_salary\": 536599388,\n  \"job_link\": \"string\",\n  \"notes\": \"string\"\n}"
+                    }
+                  ]
+                },
+                {
+                  "name": "applications partial update",
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{bearerToken}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "PATCH",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"company\": \"string\",\n  \"position\": \"string\",\n  \"status\": \"OFFER\",\n  \"job_type\": \"HYBRID\",\n  \"applied_on\": \"1951-12-14\",\n  \"expected_salary\": 1423482410,\n  \"job_link\": \"string\",\n  \"notes\": \"string\",\n  \"cv\": \"doc\"\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/api/applications/:id/",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "applications",
+                        ":id",
+                        ""
+                      ],
+                      "variable": [
+                        {
+                          "key": "id",
+                          "value": "1760",
+                          "description": "A unique integer value identifying this application."
+                        }
+                      ]
+                    }
+                  },
+                  "response": [
+                    {
+                      "name": "200",
+                      "originalRequest": {
+                        "method": "PATCH",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          },
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"company\": \"string\",\n  \"position\": \"string\",\n  \"status\": \"OFFER\",\n  \"job_type\": \"HYBRID\",\n  \"applied_on\": \"1951-12-14\",\n  \"expected_salary\": 1423482410,\n  \"job_link\": \"string\",\n  \"notes\": \"string\",\n  \"cv\": \"doc\"\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/api/applications/:id/",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "applications",
+                            ":id",
+                            ""
+                          ],
+                          "variable": [
+                            {
+                              "key": "id",
+                              "value": "1760",
+                              "description": "A unique integer value identifying this application."
+                            }
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "body": "{\n  \"company\": \"string\",\n  \"created_at\": \"1967-02-21T10:27:56.656Z\",\n  \"cv_download_url\": \"string\",\n  \"has_cv\": true,\n  \"id\": 1959,\n  \"needs_follow_up\": false,\n  \"owner\": 766,\n  \"position\": \"string\",\n  \"updated_at\": \"1998-01-12T03:36:46.996Z\",\n  \"status\": \"WISHLIST\",\n  \"job_type\": \"HYBRID\",\n  \"applied_on\": \"1970-08-19\",\n  \"expected_salary\": 536599388,\n  \"job_link\": \"string\",\n  \"notes\": \"string\"\n}"
+                    }
+                  ]
+                },
+                {
+                  "name": "applications destroy",
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{bearerToken}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "DELETE",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseUrl}}/api/applications/:id/",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "applications",
+                        ":id",
+                        ""
+                      ],
+                      "variable": [
+                        {
+                          "key": "id",
+                          "value": "1760",
+                          "description": "A unique integer value identifying this application."
+                        }
+                      ]
+                    }
+                  },
+                  "response": [
+                    {
+                      "name": "No response body",
+                      "originalRequest": {
+                        "method": "DELETE",
+                        "header": [
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/api/applications/:id/",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "applications",
+                            ":id",
+                            ""
+                          ],
+                          "variable": [
+                            {
+                              "key": "id",
+                              "value": "1760",
+                              "description": "A unique integer value identifying this application."
+                            }
+                          ]
+                        }
+                      },
+                      "status": "No Content",
+                      "code": 204,
+                      "_postman_previewlanguage": "text",
+                      "header": [],
+                      "cookie": [],
+                      "body": ""
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "export",
+              "item": [
+                {
+                  "name": "applications export retrieve",
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{bearerToken}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "text/csv"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/api/applications/export/",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "applications",
+                        "export",
+                        ""
+                      ]
+                    },
+                    "description": "Export the authenticated user's applications as CSV. List filters, search, and ordering are supported."
+                  },
+                  "response": [
+                    {
+                      "name": "200",
+                      "originalRequest": {
+                        "method": "GET",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "text/csv"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/api/applications/export/",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "applications",
+                            "export",
+                            ""
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "text",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "text/csv"
+                        }
+                      ],
+                      "cookie": [],
+                      "body": "string"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "applications list",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{bearerToken}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/applications/?job_type=HYBRID&ordering=string&page=1760&search=string&status=REJECTED",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "applications",
+                    ""
+                  ],
+                  "query": [
+                    {
+                      "key": "job_type",
+                      "value": "HYBRID",
+                      "description": "* `ONSITE` - Onsite\n* `REMOTE` - Remote\n* `HYBRID` - Hybrid"
+                    },
+                    {
+                      "key": "ordering",
+                      "value": "string",
+                      "description": "Which field to use when ordering the results."
+                    },
+                    {
+                      "key": "page",
+                      "value": "1760",
+                      "description": "A page number within the paginated result set."
+                    },
+                    {
+                      "key": "search",
+                      "value": "string",
+                      "description": "A search term."
+                    },
+                    {
+                      "key": "status",
+                      "value": "REJECTED",
+                      "description": "* `WISHLIST` - Wishlist\n* `APPLIED` - Applied\n* `INTERVIEW` - Interview\n* `OFFER` - Offer\n* `REJECTED` - Rejected"
+                    }
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "200",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": "Added as a part of security scheme: bearer",
+                        "key": "Authorization",
+                        "value": "Bearer <token>"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/api/applications/?job_type=HYBRID&ordering=string&page=1760&search=string&status=REJECTED",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "applications",
+                        ""
+                      ],
+                      "query": [
+                        {
+                          "description": "* `ONSITE` - Onsite\n* `REMOTE` - Remote\n* `HYBRID` - Hybrid",
+                          "key": "job_type",
+                          "value": "HYBRID"
+                        },
+                        {
+                          "description": "Which field to use when ordering the results.",
+                          "key": "ordering",
+                          "value": "string"
+                        },
+                        {
+                          "description": "A page number within the paginated result set.",
+                          "key": "page",
+                          "value": "1760"
+                        },
+                        {
+                          "description": "A search term.",
+                          "key": "search",
+                          "value": "string"
+                        },
+                        {
+                          "description": "* `WISHLIST` - Wishlist\n* `APPLIED` - Applied\n* `INTERVIEW` - Interview\n* `OFFER` - Offer\n* `REJECTED` - Rejected",
+                          "key": "status",
+                          "value": "REJECTED"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n  \"count\": 123,\n  \"results\": [\n    {\n      \"company\": \"string\",\n      \"created_at\": \"2010-11-09T22:56:54.060Z\",\n      \"cv_download_url\": \"string\",\n      \"has_cv\": false,\n      \"id\": 2120,\n      \"needs_follow_up\": true,\n      \"owner\": 4461,\n      \"position\": \"string\",\n      \"updated_at\": \"1985-03-13T22:48:51.446Z\",\n      \"status\": \"OFFER\",\n      \"job_type\": \"HYBRID\",\n      \"applied_on\": \"1996-06-21\",\n      \"expected_salary\": 1746930989,\n      \"job_link\": \"string\",\n      \"notes\": \"string\"\n    },\n    {\n      \"company\": \"string\",\n      \"created_at\": \"1991-11-02T21:11:46.619Z\",\n      \"cv_download_url\": \"string\",\n      \"has_cv\": false,\n      \"id\": 5035,\n      \"needs_follow_up\": true,\n      \"owner\": 3512,\n      \"position\": \"string\",\n      \"updated_at\": \"2008-10-03T20:05:11.554Z\",\n      \"status\": \"APPLIED\",\n      \"job_type\": \"ONSITE\",\n      \"applied_on\": \"1992-09-29\",\n      \"expected_salary\": 1361733184,\n      \"job_link\": \"string\",\n      \"notes\": \"string\"\n    }\n  ],\n  \"next\": \"http://api.example.org/accounts/?page=4\",\n  \"previous\": \"http://api.example.org/accounts/?page=2\"\n}"
+                }
+              ]
+            },
+            {
+              "name": "applications create",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{bearerToken}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"company\": \"string\",\n  \"position\": \"string\",\n  \"status\": \"INTERVIEW\",\n  \"job_type\": \"ONSITE\",\n  \"applied_on\": \"1973-09-26\",\n  \"expected_salary\": 1723036678,\n  \"job_link\": \"string\",\n  \"notes\": \"string\",\n  \"cv\": \"doc\"\n}",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/applications/",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "applications",
+                    ""
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "201",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": "Added as a part of security scheme: bearer",
+                        "key": "Authorization",
+                        "value": "Bearer <token>"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"company\": \"string\",\n  \"position\": \"string\",\n  \"status\": \"INTERVIEW\",\n  \"job_type\": \"ONSITE\",\n  \"applied_on\": \"1973-09-26\",\n  \"expected_salary\": 1723036678,\n  \"job_link\": \"string\",\n  \"notes\": \"string\",\n  \"cv\": \"doc\"\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/api/applications/",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "applications",
+                        ""
+                      ]
+                    }
+                  },
+                  "status": "Created",
+                  "code": 201,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n  \"company\": \"string\",\n  \"created_at\": \"1967-02-21T10:27:56.656Z\",\n  \"cv_download_url\": \"string\",\n  \"has_cv\": true,\n  \"id\": 1959,\n  \"needs_follow_up\": false,\n  \"owner\": 766,\n  \"position\": \"string\",\n  \"updated_at\": \"1998-01-12T03:36:46.996Z\",\n  \"status\": \"WISHLIST\",\n  \"job_type\": \"HYBRID\",\n  \"applied_on\": \"1970-08-19\",\n  \"expected_salary\": 536599388,\n  \"job_link\": \"string\",\n  \"notes\": \"string\"\n}"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "companies",
+          "item": [
+            {
+              "name": "{id}",
+              "item": [
+                {
+                  "name": "companies retrieve",
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{bearerToken}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/api/companies/:id/",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "companies",
+                        ":id",
+                        ""
+                      ],
+                      "variable": [
+                        {
+                          "key": "id",
+                          "value": "1760",
+                          "description": "A unique integer value identifying this company."
+                        }
+                      ]
+                    }
+                  },
+                  "response": [
+                    {
+                      "name": "200",
+                      "originalRequest": {
+                        "method": "GET",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/api/companies/:id/",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "companies",
+                            ":id",
+                            ""
+                          ],
+                          "variable": [
+                            {
+                              "key": "id",
+                              "value": "1760",
+                              "description": "A unique integer value identifying this company."
+                            }
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "body": "{\n  \"applications_count\": 6359,\n  \"created_at\": \"1977-09-06T14:33:13.807Z\",\n  \"id\": 6426,\n  \"name\": \"string\",\n  \"website\": \"string\",\n  \"location\": \"string\"\n}"
+                    }
+                  ]
+                },
+                {
+                  "name": "companies update",
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{bearerToken}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "PUT",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"name\": \"string\",\n  \"website\": \"https://fUAVu.htpofm7GGqS+EFn6uc8d29XSdX0dA.-Si46TesmYkuXWnNZYiuwo1ed\",\n  \"location\": \"string\"\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/api/companies/:id/",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "companies",
+                        ":id",
+                        ""
+                      ],
+                      "variable": [
+                        {
+                          "key": "id",
+                          "value": "1760",
+                          "description": "A unique integer value identifying this company."
+                        }
+                      ]
+                    }
+                  },
+                  "response": [
+                    {
+                      "name": "200",
+                      "originalRequest": {
+                        "method": "PUT",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          },
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"name\": \"string\",\n  \"website\": \"https://fUAVu.htpofm7GGqS+EFn6uc8d29XSdX0dA.-Si46TesmYkuXWnNZYiuwo1ed\",\n  \"location\": \"string\"\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/api/companies/:id/",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "companies",
+                            ":id",
+                            ""
+                          ],
+                          "variable": [
+                            {
+                              "key": "id",
+                              "value": "1760",
+                              "description": "A unique integer value identifying this company."
+                            }
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "body": "{\n  \"applications_count\": 6359,\n  \"created_at\": \"1977-09-06T14:33:13.807Z\",\n  \"id\": 6426,\n  \"name\": \"string\",\n  \"website\": \"string\",\n  \"location\": \"string\"\n}"
+                    }
+                  ]
+                },
+                {
+                  "name": "companies partial update",
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{bearerToken}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "PATCH",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"name\": \"string\",\n  \"website\": \"https://sMkzrTqckfQOg.glkpI0Enac2wQnEk5BGEJ5hKg8Pdm2a8HvN0ZtpWajihlaVaFksSf4lR5Y6qALe-CO1T2\",\n  \"location\": \"string\"\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/api/companies/:id/",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "companies",
+                        ":id",
+                        ""
+                      ],
+                      "variable": [
+                        {
+                          "key": "id",
+                          "value": "1760",
+                          "description": "A unique integer value identifying this company."
+                        }
+                      ]
+                    }
+                  },
+                  "response": [
+                    {
+                      "name": "200",
+                      "originalRequest": {
+                        "method": "PATCH",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          },
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"name\": \"string\",\n  \"website\": \"https://sMkzrTqckfQOg.glkpI0Enac2wQnEk5BGEJ5hKg8Pdm2a8HvN0ZtpWajihlaVaFksSf4lR5Y6qALe-CO1T2\",\n  \"location\": \"string\"\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/api/companies/:id/",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "companies",
+                            ":id",
+                            ""
+                          ],
+                          "variable": [
+                            {
+                              "key": "id",
+                              "value": "1760",
+                              "description": "A unique integer value identifying this company."
+                            }
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "body": "{\n  \"applications_count\": 6359,\n  \"created_at\": \"1977-09-06T14:33:13.807Z\",\n  \"id\": 6426,\n  \"name\": \"string\",\n  \"website\": \"string\",\n  \"location\": \"string\"\n}"
+                    }
+                  ]
+                },
+                {
+                  "name": "companies destroy",
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{bearerToken}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "DELETE",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseUrl}}/api/companies/:id/",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "companies",
+                        ":id",
+                        ""
+                      ],
+                      "variable": [
+                        {
+                          "key": "id",
+                          "value": "1760",
+                          "description": "A unique integer value identifying this company."
+                        }
+                      ]
+                    }
+                  },
+                  "response": [
+                    {
+                      "name": "No response body",
+                      "originalRequest": {
+                        "method": "DELETE",
+                        "header": [
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/api/companies/:id/",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "companies",
+                            ":id",
+                            ""
+                          ],
+                          "variable": [
+                            {
+                              "key": "id",
+                              "value": "1760",
+                              "description": "A unique integer value identifying this company."
+                            }
+                          ]
+                        }
+                      },
+                      "status": "No Content",
+                      "code": 204,
+                      "_postman_previewlanguage": "text",
+                      "header": [],
+                      "cookie": [],
+                      "body": ""
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "companies list",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{bearerToken}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/companies/?ordering=string&page=1760&search=string",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "companies",
+                    ""
+                  ],
+                  "query": [
+                    {
+                      "key": "ordering",
+                      "value": "string",
+                      "description": "Which field to use when ordering the results."
+                    },
+                    {
+                      "key": "page",
+                      "value": "1760",
+                      "description": "A page number within the paginated result set."
+                    },
+                    {
+                      "key": "search",
+                      "value": "string",
+                      "description": "A search term."
+                    }
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "200",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": "Added as a part of security scheme: bearer",
+                        "key": "Authorization",
+                        "value": "Bearer <token>"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/api/companies/?ordering=string&page=1760&search=string",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "companies",
+                        ""
+                      ],
+                      "query": [
+                        {
+                          "description": "Which field to use when ordering the results.",
+                          "key": "ordering",
+                          "value": "string"
+                        },
+                        {
+                          "description": "A page number within the paginated result set.",
+                          "key": "page",
+                          "value": "1760"
+                        },
+                        {
+                          "description": "A search term.",
+                          "key": "search",
+                          "value": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n  \"count\": 123,\n  \"results\": [\n    {\n      \"applications_count\": 4808,\n      \"created_at\": \"1979-04-24T03:38:33.850Z\",\n      \"id\": 5505,\n      \"name\": \"string\",\n      \"website\": \"string\",\n      \"location\": \"string\"\n    },\n    {\n      \"applications_count\": 2951,\n      \"created_at\": \"2017-07-04T07:12:33.670Z\",\n      \"id\": 8471,\n      \"name\": \"string\",\n      \"website\": \"string\",\n      \"location\": \"string\"\n    }\n  ],\n  \"next\": \"http://api.example.org/accounts/?page=4\",\n  \"previous\": \"http://api.example.org/accounts/?page=2\"\n}"
+                }
+              ]
+            },
+            {
+              "name": "companies create",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{bearerToken}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"string\",\n  \"website\": \"https://fUAVu.htpofm7GGqS+EFn6uc8d29XSdX0dA.-Si46TesmYkuXWnNZYiuwo1ed\",\n  \"location\": \"string\"\n}",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/companies/",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "companies",
+                    ""
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "201",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": "Added as a part of security scheme: bearer",
+                        "key": "Authorization",
+                        "value": "Bearer <token>"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"name\": \"string\",\n  \"website\": \"https://fUAVu.htpofm7GGqS+EFn6uc8d29XSdX0dA.-Si46TesmYkuXWnNZYiuwo1ed\",\n  \"location\": \"string\"\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/api/companies/",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "companies",
+                        ""
+                      ]
+                    }
+                  },
+                  "status": "Created",
+                  "code": 201,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n  \"applications_count\": 6359,\n  \"created_at\": \"1977-09-06T14:33:13.807Z\",\n  \"id\": 6426,\n  \"name\": \"string\",\n  \"website\": \"string\",\n  \"location\": \"string\"\n}"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "interviews",
+          "item": [
+            {
+              "name": "{id}",
+              "item": [
+                {
+                  "name": "interviews retrieve",
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{bearerToken}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/api/interviews/:id/",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "interviews",
+                        ":id",
+                        ""
+                      ],
+                      "variable": [
+                        {
+                          "key": "id",
+                          "value": "1760",
+                          "description": "A unique integer value identifying this interview."
+                        }
+                      ]
+                    }
+                  },
+                  "response": [
+                    {
+                      "name": "200",
+                      "originalRequest": {
+                        "method": "GET",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/api/interviews/:id/",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "interviews",
+                            ":id",
+                            ""
+                          ],
+                          "variable": [
+                            {
+                              "key": "id",
+                              "value": "1760",
+                              "description": "A unique integer value identifying this interview."
+                            }
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "body": "{\n  \"application\": 3446,\n  \"company\": \"string\",\n  \"created_at\": \"1957-08-09T11:51:09.087Z\",\n  \"id\": 1332,\n  \"position\": \"string\",\n  \"round_name\": \"string\",\n  \"scheduled_at\": \"1982-01-24T18:16:19.922Z\",\n  \"updated_at\": \"2020-07-23T23:03:18.527Z\",\n  \"mode\": \"VIDEO\",\n  \"result\": \"PENDING\",\n  \"notes\": \"string\"\n}"
+                    }
+                  ]
+                },
+                {
+                  "name": "interviews update",
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{bearerToken}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "PUT",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"application\": 3955,\n  \"round_name\": \"string\",\n  \"scheduled_at\": \"2013-08-09T17:30:43.051Z\",\n  \"mode\": \"ONSITE\",\n  \"result\": \"PENDING\",\n  \"notes\": \"string\"\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/api/interviews/:id/",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "interviews",
+                        ":id",
+                        ""
+                      ],
+                      "variable": [
+                        {
+                          "key": "id",
+                          "value": "1760",
+                          "description": "A unique integer value identifying this interview."
+                        }
+                      ]
+                    }
+                  },
+                  "response": [
+                    {
+                      "name": "200",
+                      "originalRequest": {
+                        "method": "PUT",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          },
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"application\": 3955,\n  \"round_name\": \"string\",\n  \"scheduled_at\": \"2013-08-09T17:30:43.051Z\",\n  \"mode\": \"ONSITE\",\n  \"result\": \"PENDING\",\n  \"notes\": \"string\"\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/api/interviews/:id/",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "interviews",
+                            ":id",
+                            ""
+                          ],
+                          "variable": [
+                            {
+                              "key": "id",
+                              "value": "1760",
+                              "description": "A unique integer value identifying this interview."
+                            }
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "body": "{\n  \"application\": 3446,\n  \"company\": \"string\",\n  \"created_at\": \"1957-08-09T11:51:09.087Z\",\n  \"id\": 1332,\n  \"position\": \"string\",\n  \"round_name\": \"string\",\n  \"scheduled_at\": \"1982-01-24T18:16:19.922Z\",\n  \"updated_at\": \"2020-07-23T23:03:18.527Z\",\n  \"mode\": \"VIDEO\",\n  \"result\": \"PENDING\",\n  \"notes\": \"string\"\n}"
+                    }
+                  ]
+                },
+                {
+                  "name": "interviews partial update",
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{bearerToken}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "PATCH",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"application\": 4550,\n  \"round_name\": \"string\",\n  \"scheduled_at\": \"1978-09-12T02:07:21.216Z\",\n  \"mode\": \"PHONE\",\n  \"result\": \"FAILED\",\n  \"notes\": \"string\"\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/api/interviews/:id/",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "interviews",
+                        ":id",
+                        ""
+                      ],
+                      "variable": [
+                        {
+                          "key": "id",
+                          "value": "1760",
+                          "description": "A unique integer value identifying this interview."
+                        }
+                      ]
+                    }
+                  },
+                  "response": [
+                    {
+                      "name": "200",
+                      "originalRequest": {
+                        "method": "PATCH",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          },
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"application\": 4550,\n  \"round_name\": \"string\",\n  \"scheduled_at\": \"1978-09-12T02:07:21.216Z\",\n  \"mode\": \"PHONE\",\n  \"result\": \"FAILED\",\n  \"notes\": \"string\"\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/api/interviews/:id/",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "interviews",
+                            ":id",
+                            ""
+                          ],
+                          "variable": [
+                            {
+                              "key": "id",
+                              "value": "1760",
+                              "description": "A unique integer value identifying this interview."
+                            }
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "body": "{\n  \"application\": 3446,\n  \"company\": \"string\",\n  \"created_at\": \"1957-08-09T11:51:09.087Z\",\n  \"id\": 1332,\n  \"position\": \"string\",\n  \"round_name\": \"string\",\n  \"scheduled_at\": \"1982-01-24T18:16:19.922Z\",\n  \"updated_at\": \"2020-07-23T23:03:18.527Z\",\n  \"mode\": \"VIDEO\",\n  \"result\": \"PENDING\",\n  \"notes\": \"string\"\n}"
+                    }
+                  ]
+                },
+                {
+                  "name": "interviews destroy",
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{bearerToken}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "DELETE",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseUrl}}/api/interviews/:id/",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "interviews",
+                        ":id",
+                        ""
+                      ],
+                      "variable": [
+                        {
+                          "key": "id",
+                          "value": "1760",
+                          "description": "A unique integer value identifying this interview."
+                        }
+                      ]
+                    }
+                  },
+                  "response": [
+                    {
+                      "name": "No response body",
+                      "originalRequest": {
+                        "method": "DELETE",
+                        "header": [
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/api/interviews/:id/",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "interviews",
+                            ":id",
+                            ""
+                          ],
+                          "variable": [
+                            {
+                              "key": "id",
+                              "value": "1760",
+                              "description": "A unique integer value identifying this interview."
+                            }
+                          ]
+                        }
+                      },
+                      "status": "No Content",
+                      "code": 204,
+                      "_postman_previewlanguage": "text",
+                      "header": [],
+                      "cookie": [],
+                      "body": ""
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "upcoming",
+              "item": [
+                {
+                  "name": "interviews upcoming retrieve",
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{bearerToken}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/api/interviews/upcoming/",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "interviews",
+                        "upcoming",
+                        ""
+                      ]
+                    }
+                  },
+                  "response": [
+                    {
+                      "name": "200",
+                      "originalRequest": {
+                        "method": "GET",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/api/interviews/upcoming/",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "interviews",
+                            "upcoming",
+                            ""
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "body": "{\n  \"application\": 3446,\n  \"company\": \"string\",\n  \"created_at\": \"1957-08-09T11:51:09.087Z\",\n  \"id\": 1332,\n  \"position\": \"string\",\n  \"round_name\": \"string\",\n  \"scheduled_at\": \"1982-01-24T18:16:19.922Z\",\n  \"updated_at\": \"2020-07-23T23:03:18.527Z\",\n  \"mode\": \"VIDEO\",\n  \"result\": \"PENDING\",\n  \"notes\": \"string\"\n}"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "interviews list",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{bearerToken}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/interviews/?application=1760&mode=ONSITE&ordering=string&page=1760&result=FAILED&search=string",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "interviews",
+                    ""
+                  ],
+                  "query": [
+                    {
+                      "key": "application",
+                      "value": "1760"
+                    },
+                    {
+                      "key": "mode",
+                      "value": "ONSITE",
+                      "description": "* `ONSITE` - Onsite\n* `VIDEO` - Video\n* `PHONE` - Phone"
+                    },
+                    {
+                      "key": "ordering",
+                      "value": "string",
+                      "description": "Which field to use when ordering the results."
+                    },
+                    {
+                      "key": "page",
+                      "value": "1760",
+                      "description": "A page number within the paginated result set."
+                    },
+                    {
+                      "key": "result",
+                      "value": "FAILED",
+                      "description": "* `PENDING` - Pending\n* `PASSED` - Passed\n* `FAILED` - Failed"
+                    },
+                    {
+                      "key": "search",
+                      "value": "string",
+                      "description": "A search term."
+                    }
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "200",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": "Added as a part of security scheme: bearer",
+                        "key": "Authorization",
+                        "value": "Bearer <token>"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/api/interviews/?application=1760&mode=ONSITE&ordering=string&page=1760&result=FAILED&search=string",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "interviews",
+                        ""
+                      ],
+                      "query": [
+                        {
+                          "key": "application",
+                          "value": "1760"
+                        },
+                        {
+                          "description": "* `ONSITE` - Onsite\n* `VIDEO` - Video\n* `PHONE` - Phone",
+                          "key": "mode",
+                          "value": "ONSITE"
+                        },
+                        {
+                          "description": "Which field to use when ordering the results.",
+                          "key": "ordering",
+                          "value": "string"
+                        },
+                        {
+                          "description": "A page number within the paginated result set.",
+                          "key": "page",
+                          "value": "1760"
+                        },
+                        {
+                          "description": "* `PENDING` - Pending\n* `PASSED` - Passed\n* `FAILED` - Failed",
+                          "key": "result",
+                          "value": "FAILED"
+                        },
+                        {
+                          "description": "A search term.",
+                          "key": "search",
+                          "value": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n  \"count\": 123,\n  \"results\": [\n    {\n      \"application\": 427,\n      \"company\": \"string\",\n      \"created_at\": \"1960-11-23T11:43:30.064Z\",\n      \"id\": 8307,\n      \"position\": \"string\",\n      \"round_name\": \"string\",\n      \"scheduled_at\": \"2005-09-10T17:37:42.259Z\",\n      \"updated_at\": \"2009-02-15T06:20:53.267Z\",\n      \"mode\": \"VIDEO\",\n      \"result\": \"PASSED\",\n      \"notes\": \"string\"\n    },\n    {\n      \"application\": 4041,\n      \"company\": \"string\",\n      \"created_at\": \"2024-05-17T07:55:32.073Z\",\n      \"id\": 8307,\n      \"position\": \"string\",\n      \"round_name\": \"string\",\n      \"scheduled_at\": \"1949-04-24T08:32:52.571Z\",\n      \"updated_at\": \"1994-11-17T19:40:36.062Z\",\n      \"mode\": \"ONSITE\",\n      \"result\": \"FAILED\",\n      \"notes\": \"string\"\n    }\n  ],\n  \"next\": \"http://api.example.org/accounts/?page=4\",\n  \"previous\": \"http://api.example.org/accounts/?page=2\"\n}"
+                }
+              ]
+            },
+            {
+              "name": "interviews create",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{bearerToken}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"application\": 3955,\n  \"round_name\": \"string\",\n  \"scheduled_at\": \"2013-08-09T17:30:43.051Z\",\n  \"mode\": \"ONSITE\",\n  \"result\": \"PENDING\",\n  \"notes\": \"string\"\n}",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/interviews/",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "interviews",
+                    ""
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "201",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": "Added as a part of security scheme: bearer",
+                        "key": "Authorization",
+                        "value": "Bearer <token>"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"application\": 3955,\n  \"round_name\": \"string\",\n  \"scheduled_at\": \"2013-08-09T17:30:43.051Z\",\n  \"mode\": \"ONSITE\",\n  \"result\": \"PENDING\",\n  \"notes\": \"string\"\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/api/interviews/",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "interviews",
+                        ""
+                      ]
+                    }
+                  },
+                  "status": "Created",
+                  "code": 201,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n  \"application\": 3446,\n  \"company\": \"string\",\n  \"created_at\": \"1957-08-09T11:51:09.087Z\",\n  \"id\": 1332,\n  \"position\": \"string\",\n  \"round_name\": \"string\",\n  \"scheduled_at\": \"1982-01-24T18:16:19.922Z\",\n  \"updated_at\": \"2020-07-23T23:03:18.527Z\",\n  \"mode\": \"VIDEO\",\n  \"result\": \"PENDING\",\n  \"notes\": \"string\"\n}"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "login",
+          "item": [
+            {
+              "name": "login create",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "const body = pm.response.json();\r\nconst data = body.data ?? body;\r\n\r\npm.collectionVariables.set(\r\n  \"access_token\",\r\n  data.access,\r\n);\r\npm.collectionVariables.set(\r\n  \"refresh_token\",\r\n  data.refresh,\r\n);\r\npm.collectionVariables.set(\r\n  \"bearerToken\",\r\n  data.access,\r\n);"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "noauth"
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"password\": \"wasif12345\",\n  \"username\": \"wasif\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/login/",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "login",
+                    ""
+                  ]
+                },
+                "description": "Takes a set of user credentials and returns an access and refresh JSON web\ntoken pair to prove the authentication of those credentials."
+              },
+              "response": [
+                {
+                  "name": "200",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"password\": \"string\",\n  \"username\": \"string\"\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/api/login/",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "login",
+                        ""
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n  \"access\": \"string\",\n  \"refresh\": \"string\"\n}"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "register",
+          "item": [
+            {
+              "name": "register create",
+              "request": {
+                "auth": {
+                  "type": "noauth"
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"GJeDIK5AVXJmaGI@UZcQHFywXRhqNvyAjxFtg.cw\",\n  \"password\": \"string\",\n  \"username\": \"wTun\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/register/",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "register",
+                    ""
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "201",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": "Added as a part of security scheme: bearer",
+                        "key": "Authorization",
+                        "value": "Bearer <token>"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"email\": \"GJeDIK5AVXJmaGI@UZcQHFywXRhqNvyAjxFtg.cw\",\n  \"password\": \"string\",\n  \"username\": \"wTun\"\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/api/register/",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "register",
+                        ""
+                      ]
+                    }
+                  },
+                  "status": "Created",
+                  "code": 201,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n  \"email\": \"4oNroQRsv3@scXxVKBUrDVXdMBHTte.xclf\",\n  \"id\": 8956,\n  \"username\": \"2Ht7D+\"\n}"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "stats",
+          "item": [
+            {
+              "name": "stats retrieve",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{bearerToken}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/stats/",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "stats",
+                    ""
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "200",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": "Added as a part of security scheme: bearer",
+                        "key": "Authorization",
+                        "value": "Bearer <token>"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/api/stats/",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "stats",
+                        ""
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n  \"applied\": 7727,\n  \"interview\": 9197,\n  \"offer\": 7996,\n  \"rejected\": 9300,\n  \"total\": 4017,\n  \"wishlist\": 3980\n}"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "token",
+          "item": [
+            {
+              "name": "refresh",
+              "item": [
+                {
+                  "name": "token refresh create",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "const body = pm.response.json();\r\nconst data = body.data ?? body;\r\n\r\npm.collectionVariables.set(\r\n  \"access_token\",\r\n  data.access,\r\n);\r\npm.collectionVariables.set(\r\n  \"bearerToken\",\r\n  data.access,\r\n);"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "noauth"
+                    },
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"refresh\": \"{{refresh_token}}\"\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/api/token/refresh/",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "token",
+                        "refresh",
+                        ""
+                      ]
+                    },
+                    "description": "Takes a refresh type JSON web token and returns an access type JSON web\ntoken if the refresh token is valid."
+                  },
+                  "response": [
+                    {
+                      "name": "200",
+                      "originalRequest": {
+                        "method": "POST",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          },
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"refresh\": \"string\"\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/api/token/refresh/",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "token",
+                            "refresh",
+                            ""
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "body": "{\n  \"access\": \"string\"\n}"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{access_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://127.0.0.1:8000"
+    },
+    {
+      "key": "access_token",
+      "secret": true
+    },
+    {
+      "key": "refresh_token",
+      "secret": true
+    },
+    {
+      "key": "bearerToken",
+      "value": ""
+    }
+  ]
+}

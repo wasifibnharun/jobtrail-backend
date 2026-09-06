@@ -10,6 +10,11 @@ from django.utils import timezone
 User = get_user_model()
 
 
+# def get_applications_count(self, company) :
+# def get_needs_follow_up(self, application) :
+# def get_has_cv(self, application) -> bool:
+# def get_cv_download_url(self, application) :
+
 class RegisterSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(required=True)
     password = serializers.CharField(
@@ -45,7 +50,7 @@ class CompanySerializer(serializers.ModelSerializer):
             "created_at",
         ]
 
-    def get_applications_count(self, company):
+    def get_applications_count(self, company) -> int:
         annotated_count = getattr(
             company,
             "applications_count",
@@ -179,7 +184,7 @@ class ApplicationSerializer(serializers.ModelSerializer):
 
         return updated_application
 
-    def get_needs_follow_up(self, application):
+    def get_needs_follow_up(self, application) -> bool:
         if (
             application.status != Application.Status.APPLIED
             or application.applied_on is None
@@ -190,10 +195,10 @@ class ApplicationSerializer(serializers.ModelSerializer):
 
         return application.applied_on < follow_up_cutoff
 
-    def get_has_cv(self, application):
+    def get_has_cv(self, application) -> bool:
         return bool(application.cv)
 
-    def get_cv_download_url(self, application):
+    def get_cv_download_url(self, application) -> str | None:
         if not application.cv:
             return None
 
@@ -249,3 +254,11 @@ class InterviewSerializer(serializers.ModelSerializer):
             )
 
         return fields
+
+class StatsSerializer(serializers.Serializer):
+    total = serializers.IntegerField(read_only=True)
+    wishlist = serializers.IntegerField(read_only=True)
+    applied = serializers.IntegerField(read_only=True)
+    interview = serializers.IntegerField(read_only=True)
+    offer = serializers.IntegerField(read_only=True)
+    rejected = serializers.IntegerField(read_only=True)

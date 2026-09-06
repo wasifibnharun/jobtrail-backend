@@ -1032,3 +1032,63 @@ class CVAttachmentAPITests(APITestCase):
             status.HTTP_204_NO_CONTENT,
         )
         self.assertFalse(second_path.exists())
+
+class APIDocumentationTests(APITestCase):
+    def test_schema_swagger_and_redoc_are_public(self):
+        schema_response = self.client.get(
+            reverse("schema"),
+            {"format": "json"},
+        )
+        swagger_response = self.client.get(
+            reverse("swagger-ui")
+        )
+        redoc_response = self.client.get(
+            reverse("redoc")
+        )
+
+        self.assertEqual(
+            schema_response.status_code,
+            status.HTTP_200_OK,
+        )
+        self.assertEqual(
+            swagger_response.status_code,
+            status.HTTP_200_OK,
+        )
+        self.assertEqual(
+            redoc_response.status_code,
+            status.HTTP_200_OK,
+        )
+
+        self.assertIn("paths", schema_response.data)
+        self.assertIn(
+            "/api/applications/",
+            schema_response.data["paths"],
+        )
+        self.assertIn(
+            "/api/interviews/upcoming/",
+            schema_response.data["paths"],
+        )
+
+    class APIDocumentationTests(APITestCase):
+        def test_schema_swagger_and_redoc_are_public(self):
+            schema_response = self.client.get(reverse("schema"))
+            swagger_response = self.client.get(reverse("swagger-ui"))
+            redoc_response = self.client.get(reverse("redoc"))
+
+            self.assertEqual(
+                schema_response.status_code,
+                status.HTTP_200_OK,
+            )
+            self.assertEqual(
+                swagger_response.status_code,
+                status.HTTP_200_OK,
+            )
+            self.assertEqual(
+                redoc_response.status_code,
+                status.HTTP_200_OK,
+            )
+            self.assertIn("paths", schema_response.data)
+            self.assertIn(
+                "/api/applications/",
+                schema_response.data["paths"],
+            )

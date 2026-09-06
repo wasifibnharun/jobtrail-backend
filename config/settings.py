@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     "django_filters",
     "corsheaders",
     "applications",
+    "drf_spectacular",
 ]
 
 MIDDLEWARE = [
@@ -213,6 +214,22 @@ REST_FRAMEWORK = {
         "applications.renderers.EnvelopeJSONRenderer",
         "rest_framework.renderers.BrowsableAPIRenderer",
     ),
+    "DEFAULT_SCHEMA_CLASS": (
+        "drf_spectacular.openapi.AutoSchema"
+    ),
+}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "JobTrail API",
+    "DESCRIPTION": (
+        "REST API for tracking companies, job applications, "
+        "CV attachments, and interviews. JSON responses use "
+        "the {success, message, data} envelope."
+    ),
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
+    "COMPONENT_SPLIT_REQUEST": True,
+    "SCHEMA_PATH_PREFIX": r"/api",
 }
 
 SIMPLE_JWT = {
