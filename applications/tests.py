@@ -149,6 +149,40 @@ class AuthenticationTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["count"], 0)
 
+    def test_auth_endpoints_are_throttled(self):
+        url = reverse("register")
+        payload = {
+            "username": "throttle-user",
+            "email": "throttle@example.com",
+            "password": "strongpass123",
+        }
+        client_ip = "192.0.2.25"
+
+        for _ in range(10):
+            response = self.client.post(
+                url,
+                payload,
+                format="json",
+                REMOTE_ADDR=client_ip,
+            )
+            self.assertNotEqual(
+                response.status_code,
+                status.HTTP_429_TOO_MANY_REQUESTS,
+            )
+
+        throttled_response = self.client.post(
+            url,
+            payload,
+            format="json",
+            REMOTE_ADDR=client_ip,
+        )
+
+        self.assertEqual(
+            throttled_response.status_code,
+            status.HTTP_429_TOO_MANY_REQUESTS,
+        )
+        self.assertIn("detail", throttled_response.data)
+
 
 class ApplicationAPITests(APITestCase):
     def setUp(self):
@@ -536,6 +570,47 @@ class ApplicationAPITests(APITestCase):
             )
             self.assertNotIn("Hidden Django Developer", content)
             self.assertNotIn("Rejected Company", content)
+
+    def test_json_responses_use_consistent_envelope(self):
+        application = self.create_application()
+
+        success_response = self.client.get(
+            reverse("application-list")
+        )
+        success_body = success_response.json()
+
+        self.assertEqual(
+            set(success_body),
+            {"success", "message", "data"},
+        )
+        self.assertTrue(success_body["success"])
+        self.assertEqual(
+            success_body["message"],
+            "Request successful.",
+        )
+        self.assertEqual(success_body["data"]["count"], 1)
+        self.assertEqual(
+            success_body["data"]["results"][0]["id"],
+            application.id,
+        )
+
+        self.client.force_authenticate(user=None)
+
+        error_response = self.client.get(
+            reverse("application-list")
+        )
+        error_body = error_response.json()
+
+        self.assertEqual(
+            set(error_body),
+            {"success", "message", "data"},
+        )
+        self.assertFalse(error_body["success"])
+        self.assertEqual(
+            error_response.status_code,
+            status.HTTP_401_UNAUTHORIZED,
+        )
+        self.assertIn("detail", error_body["data"])
 
 class CompanyAPITests(APITestCase):
     def setUp(self):

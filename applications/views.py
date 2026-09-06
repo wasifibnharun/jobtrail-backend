@@ -24,15 +24,26 @@ from rest_framework import status
 from rest_framework.exceptions import NotFound
 import csv
 from django.http import FileResponse, HttpResponse
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
 
 
 User = get_user_model()
 
 
+class LoginView(TokenObtainPairView):
+    throttle_scope = "auth"
+
+class RefreshTokenView(TokenRefreshView):
+    throttle_scope = "auth"
+
 class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = RegisterSerializer
     permission_classes = [AllowAny]
+    throttle_scope = "auth"
 
 class CompanyViewSet(viewsets.ModelViewSet):
     serializer_class = CompanySerializer
